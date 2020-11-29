@@ -1,0 +1,154 @@
+add_namespace = CM_events
+
+country_event = {
+	id = CM_events.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CM_events.1" }
+	hidden = yes
+	
+	is_triggered_only = yes
+	fire_only_once = no
+	
+	option = {
+		if = {
+			limit = {
+				check_variable = { num_of_available_civilian_factories > 0 }
+				check_variable = { CM_infrastructure_construction_targets^num > 0 }
+			}
+			
+			CM_check_infrastructure_construction_targets_for_targeted_infrastructure_level = yes
+			
+			if = {
+				limit = { check_variable = { CM_infrastructure_construction_targets^num > 0 } }
+				
+				set_temp_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories }
+				
+				for_each_scope_loop = {
+					array = CM_infrastructure_construction_targets
+					break = cm_unnecessary_infrastructure_breaker
+					
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = no
+					}
+					
+					if = {
+						limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+						
+						CM_remove_unnecessary_infrastructure_for_shared_buildings_constructions = yes
+						
+						set_temp_variable = { CM_temp_targeted_infrastructure_level = CM_targeted_infrastructure_level }
+						subtract_from_temp_variable = { CM_temp_targeted_infrastructure_level = 1 }
+						
+						add_building_construction = {
+							type = infrastructure
+							level = CM_temp_targeted_infrastructure_level
+							instant_build = no
+						}
+					}
+					else = {
+						CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+					}
+					
+					print_variables = {
+						file = CM_log_file
+						text = CM_country_industrial_complexes_calculation_variables
+						append = yes
+					}
+				}
+				
+				if = {
+					limit = { check_variable = { num_of_available_civilian_factories = 0 } }
+					
+					country_event = {
+						id = CM_events.1
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+country_event = {
+	id = CM_events.97
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CM_events.97" }
+	hidden = yes
+	
+	is_triggered_only = yes
+	fire_only_once = no
+	
+	option = {
+		303 = { #
+			add_building_construction = {
+				type = infrastructure
+				level = -1
+				instant_build = no
+			}
+			
+			#add_building_construction = {
+			#	type = infrastructure
+			#	level = 10
+			#	instant_build = no
+			#}
+			#add_building_construction = {
+			#	type = infrastructure
+			#	level = 6
+			#	instant_build = yes
+			#}
+			#remove_building = {
+			#	type = infrastructure
+			#	level = 2
+			#}
+		}
+	}
+}
+
+country_event = {
+	id = CM_events.98
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CM_events.98" }
+	hidden = yes
+	
+	is_triggered_only = yes
+	fire_only_once = no
+	
+	option = {
+		191 = { CM_reconstruct_infrastructure_costructions = yes }
+	}
+}
+
+country_event = {
+	id = CM_events.99
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CM_events.99" }
+	hidden = yes
+	
+	is_triggered_only = yes
+	fire_only_once = no
+	
+	option = {
+		3 = {
+			add_state_modifier = {
+				modifier = {
+					local_resources = 0.5
+					state_resources_factor = 1
+				}
+			}
+		}
+	}
+}
+
+country_event = {
+	id = CM_events.100
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CM_events.100" }
+	hidden = yes
+	
+	is_triggered_only = yes
+	fire_only_once = no
+	
+	option = {
+		add_offsite_building = {
+			type = industrial_complex
+			level = 30
+		}
+	}
+}
