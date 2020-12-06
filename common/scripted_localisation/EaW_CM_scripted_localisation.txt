@@ -1,5 +1,5 @@
 defined_text = {
-	name = GetCMInfrastructureRCDescription
+	name = GetCMAutomaticInfrastructureConstructionDescription
 	
 	text = {
 		trigger = { check_variable = { CM_construction_focus_ID = -1 } }
@@ -216,12 +216,12 @@ defined_text = {
 	text = {
 		trigger = {
 			check_variable = {
-				var = CM_construction_focus_ID?1
+				var = CM_construction_focus_ID?2
 				compare = not_equals
 				value = 2
 			}
 			check_variable = {
-				var = CM_construction_focus_ID?10
+				var = CM_construction_focus_ID?20
 				compare = not_equals
 				value = 20
 			}
@@ -294,12 +294,12 @@ defined_text = {
 	text = {
 		trigger = {
 			check_variable = {
-				var = CM_construction_focus_ID?1
+				var = CM_construction_focus_ID?3
 				compare = not_equals
 				value = 3
 			}
 			check_variable = {
-				var = CM_construction_focus_ID?10
+				var = CM_construction_focus_ID?30
 				compare = not_equals
 				value = 30
 			}

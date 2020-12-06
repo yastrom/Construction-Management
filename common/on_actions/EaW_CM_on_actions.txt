@@ -11,12 +11,24 @@ on_actions = {
 				log = "Construction Management: [GetDateText]: ROOT: [ROOT.GetName] on_daily"
 				
 				if = {
+					limit = { check_variable = { CM_infrastructure_construction_targets^num > 0 } }
+					
+					CM_check_infrastructure_construction_targets_for_targeted_infrastructure_level = yes
+					
+					if = {
+						limit = { check_variable = { CM_infrastructure_construction_targets^num > 0 } }
+						
+						CM_check_infrastructure_construction_targets_for_ongoing_construction_with_temp_variable_for_check = yes
+					}
+				}
+				
+				if = {
 					limit = { check_variable = { CM_construction_focus_ID = -1 } }
 					
 					if = {
 						limit = { CM_any_defined_scopes_have_possible_free_infrastructure_slots = yes }
 						
-						CM_add_multiple_infrastructure_constructions = yes
+						CM_add_infrastructure_constructions = yes
 					}
 					else = {
 						clear_variable = CM_construction_focus_ID
@@ -28,7 +40,7 @@ on_actions = {
 					if = {
 						limit = { CM_any_defined_scopes_have_possible_free_industrial_complexes_slots = yes } 
 						
-						CM_add_multiple_industrial_complexes_constructions = yes
+						CM_add_industrial_complexes_constructions = yes
 					}
 					else = {
 						clear_variable = CM_construction_focus_ID
@@ -40,7 +52,7 @@ on_actions = {
 					if = {
 						limit = { CM_any_defined_scopes_have_possible_free_arms_factories_slots = yes }
 						
-						CM_add_multiple_arms_factories_constructions = yes
+						CM_add_arms_factories_constructions = yes
 					}
 					else = {
 						clear_variable = CM_construction_focus_ID
@@ -52,970 +64,965 @@ on_actions = {
 					if = {
 						limit = { CM_any_defined_scopes_have_possible_free_naval_dockyards_slots = yes }
 						
-						CM_add_multiple_naval_dockyards_constructions = yes
+						CM_add_naval_dockyards_constructions = yes
 					}
 					else = {
 						clear_variable = CM_construction_focus_ID
 					}
 				}
-				else = { # CM_construction_focus_ID >= 10
-					CM_check_infrastructure_construction_targets_for_targeted_infrastructure_level = yes
-					set_temp_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories }
+				else_if = {
+					limit = { check_variable = { CM_construction_focus_ID = 10 } }
+					
+					CM_calculate_country_variables_for_automatic_industrial_complexes_construction = yes
+					
+					for_each_scope_loop = {
+						array = CM_infrastructure_construction_targets
+						
+						if = {
+							limit = { check_variable = { CM_ROI_coefficient?1 = 1 } }
+							
+							if = {
+								limit = {
+									check_variable = {
+										var = CM_possible_num_of_civilian_factories_available_for_projects
+										compare = greater_than_or_equals
+										value = 15
+									}
+								}
+								
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = industrial_complex
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_industrial_complexes_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_fastest_ROI_full_line = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
+							else = {
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = industrial_complex
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_industrial_complexes_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_fastest_ROI = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
+						}
+						else_if = {
+							limit = { check_variable = { CM_ROI_coefficient = 2 } }
+							
+							if = {
+								limit = {
+									check_variable = {
+										var = CM_possible_num_of_civilian_factories_available_for_projects
+										compare = greater_than_or_equals
+										value = 15
+									}
+								}
+								
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = industrial_complex
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_industrial_complexes_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_optimal_ROI_full_line = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
+							else = {
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = industrial_complex
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_industrial_complexes_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_optimal_ROI = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
+						}
+						else = { # CM_ROI_coefficient = 3
+							CM_calculate_min_num_of_infrastructure_for_construction = yes
+							
+							if = {
+								limit = {
+									check_variable = {
+										var = CM_possible_num_of_civilian_factories_available_for_projects
+										compare = greater_than_or_equals
+										value = 15
+									}
+								}
+								
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = industrial_complex
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_industrial_complexes_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_maximum_ROI_full_line = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
+							else = {
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = industrial_complex
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_industrial_complexes_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_maximum_ROI = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
+						}
+					}
 					
 					if = {
-						limit = { check_variable = { CM_construction_focus_ID = 10 } }
+						limit = { CM_any_defined_scopes_have_possible_free_industrial_complexes_slots = yes } 
 						
-						CM_calculate_country_variables_for_automatic_industrial_complexes_construction = yes
-						
-						for_each_scope_loop = {
-							array = CM_infrastructure_construction_targets
-							
-							if = {
-								limit = { check_variable = { CM_ROI_coefficient?1 = 1 } }
-								
-								if = {
-									limit = {
-										check_variable = {
-											var = CM_possible_num_of_civilian_factories_available_for_projects
-											compare = greater_than_or_equals
-											value = 15
-										}
-									}
-									
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = industrial_complex
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_industrial_complexes_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_fastest_ROI_full_line = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-								else = {
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = industrial_complex
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_industrial_complexes_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_fastest_ROI = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-							}
-							else_if = {
-								limit = { check_variable = { CM_ROI_coefficient = 2 } }
-								
-								if = {
-									limit = {
-										check_variable = {
-											var = CM_possible_num_of_civilian_factories_available_for_projects
-											compare = greater_than_or_equals
-											value = 15
-										}
-									}
-									
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = industrial_complex
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_industrial_complexes_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_optimal_ROI_full_line = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-								else = {
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = industrial_complex
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_industrial_complexes_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_optimal_ROI = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-							}
-							else = { # CM_ROI_coefficient = 3
-								CM_calculate_min_num_of_infrastructure_for_construction = yes
-								
-								if = {
-									limit = {
-										check_variable = {
-											var = CM_possible_num_of_civilian_factories_available_for_projects
-											compare = greater_than_or_equals
-											value = 15
-										}
-									}
-									
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = industrial_complex
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_industrial_complexes_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_maximum_ROI_full_line = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-								else = {
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = industrial_complex
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_industrial_complexes_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_maximum_ROI = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-							}
-						}
+						CM_add_industrial_complexes_and_infrastructure_constructions = yes
+					}
+					else = {
+						clear_variable = CM_construction_focus_ID
+					}
+				}
+				else_if = {
+					limit = { check_variable = { CM_construction_focus_ID = 20 } }
+					
+					CM_calculate_country_variables_for_automatic_arms_factories_construction = yes
+					
+					for_each_scope_loop = {
+						array = CM_infrastructure_construction_targets
 						
 						if = {
-							limit = { CM_any_defined_scopes_have_possible_free_industrial_complexes_slots = yes } 
+							limit = { check_variable = { CM_ROI_coefficient?1 = 1 } }
 							
-							CM_add_multiple_industrial_complexes_and_infrastructure_constructions = yes
+							if = {
+								limit = {
+									check_variable = {
+										var = CM_possible_num_of_civilian_factories_available_for_projects
+										compare = greater_than_or_equals
+										value = 15
+									}
+								}
+								
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = arms_factory
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_arms_factories_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_arms_factories_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_fastest_ROI_full_line = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
+							else = {
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = arms_factory
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_arms_factories_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_arms_factories_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_fastest_ROI = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
 						}
-						else = {
-							clear_variable = CM_construction_focus_ID
+						else_if = {
+							limit = { check_variable = { CM_ROI_coefficient = 2 } }
+							
+							if = {
+								limit = {
+									check_variable = {
+										var = CM_possible_num_of_civilian_factories_available_for_projects
+										compare = greater_than_or_equals
+										value = 15
+									}
+								}
+								
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = arms_factory
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_arms_factories_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_arms_factories_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_optimal_ROI_full_line = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
+							else = {
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = arms_factory
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_arms_factories_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_arms_factories_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_optimal_ROI = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
+						}
+						else = { # CM_ROI_coefficient = 3
+							CM_calculate_min_num_of_infrastructure_for_construction = yes
+							
+							if = {
+								limit = {
+									check_variable = {
+										var = CM_possible_num_of_civilian_factories_available_for_projects
+										compare = greater_than_or_equals
+										value = 15
+									}
+								}
+								
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = arms_factory
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_arms_factories_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_arms_factories_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_maximum_ROI_full_line = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
+							else = {
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = arms_factory
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_arms_factories_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_arms_factories_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_maximum_ROI = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
 						}
 					}
-					else_if = {
-						limit = { check_variable = { CM_construction_focus_ID = 20 } }
+					
+					if = {
+						limit = { CM_any_defined_scopes_have_possible_free_arms_factories_slots = yes } 
 						
-						CM_calculate_country_variables_for_automatic_arms_factories_construction = yes
-						
-						for_each_scope_loop = {
-							array = CM_infrastructure_construction_targets
-							
-							if = {
-								limit = { check_variable = { CM_ROI_coefficient?1 = 1 } }
-								
-								if = {
-									limit = {
-										check_variable = {
-											var = CM_possible_num_of_civilian_factories_available_for_projects
-											compare = greater_than_or_equals
-											value = 15
-										}
-									}
-									
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = arms_factory
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_arms_factories_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_arms_factories_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_fastest_ROI_full_line = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-								else = {
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = arms_factory
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_arms_factories_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_arms_factories_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_fastest_ROI = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-							}
-							else_if = {
-								limit = { check_variable = { CM_ROI_coefficient = 2 } }
-								
-								if = {
-									limit = {
-										check_variable = {
-											var = CM_possible_num_of_civilian_factories_available_for_projects
-											compare = greater_than_or_equals
-											value = 15
-										}
-									}
-									
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = arms_factory
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_arms_factories_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_arms_factories_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_optimal_ROI_full_line = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-								else = {
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = arms_factory
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_arms_factories_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_arms_factories_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_optimal_ROI = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-							}
-							else = { # CM_ROI_coefficient = 3
-								CM_calculate_min_num_of_infrastructure_for_construction = yes
-								
-								if = {
-									limit = {
-										check_variable = {
-											var = CM_possible_num_of_civilian_factories_available_for_projects
-											compare = greater_than_or_equals
-											value = 15
-										}
-									}
-									
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = arms_factory
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_arms_factories_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_arms_factories_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_maximum_ROI_full_line = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-								else = {
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = arms_factory
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_arms_factories_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_arms_factories_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_maximum_ROI = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-							}
-						}
+						CM_add_arms_factories_and_infrastructure_constructions = yes
+					}
+					else = {
+						clear_variable = CM_construction_focus_ID
+					}
+				}
+				else = { # CM_construction_focus_ID = 30
+					CM_calculate_country_variables_for_automatic_naval_dockyards_construction = yes
+					
+					for_each_scope_loop = {
+						array = CM_infrastructure_construction_targets
 						
 						if = {
-							limit = { CM_any_defined_scopes_have_possible_free_arms_factories_slots = yes } 
+							limit = { check_variable = { CM_ROI_coefficient?1 = 1 } }
 							
-							CM_add_multiple_arms_factories_and_infrastructure_constructions = yes
+							if = {
+								limit = {
+									check_variable = {
+										var = CM_possible_num_of_civilian_factories_available_for_projects
+										compare = greater_than_or_equals
+										value = 15
+									}
+								}
+								
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = dockyard
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_naval_dockyards_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_fastest_ROI_full_line = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
+							else = {
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = dockyard
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_naval_dockyards_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_fastest_ROI = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
 						}
-						else = {
-							clear_variable = CM_construction_focus_ID
+						else_if = {
+							limit = { check_variable = { CM_ROI_coefficient = 2 } }
+							
+							if = {
+								limit = {
+									check_variable = {
+										var = CM_possible_num_of_civilian_factories_available_for_projects
+										compare = greater_than_or_equals
+										value = 15
+									}
+								}
+								
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = dockyard
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_naval_dockyards_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_optimal_ROI_full_line = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
+							else = {
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = dockyard
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_naval_dockyards_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_optimal_ROI = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
+						}
+						else = { # CM_ROI_coefficient = 3
+							CM_calculate_min_num_of_infrastructure_for_construction = yes
+							
+							if = {
+								limit = {
+									check_variable = {
+										var = CM_possible_num_of_civilian_factories_available_for_projects
+										compare = greater_than_or_equals
+										value = 15
+									}
+								}
+								
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = dockyard
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_naval_dockyards_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_maximum_ROI_full_line = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
+							else = {
+								for_each_scope_loop = {
+									array = CM_infrastructure_construction_targets
+									break = cm_unnecessary_infrastructure_breaker
+									
+									add_building_construction = {
+										type = infrastructure
+										level = 1
+										instant_build = no
+									}
+									
+									if = {
+										limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
+										
+										if = {
+											limit = {
+												free_building_slots = {
+													building = dockyard
+													size > 0
+													include_locked = no
+												}
+											}
+											
+											CM_find_temp_num_of_free_naval_dockyards_slots = yes
+											
+											if = {
+												limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
+												
+												CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_maximum_ROI = yes
+												CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
+											}
+											else = {
+												CM_keep_one_infrastructure_construction = yes
+											}
+										}
+										else = {
+											CM_keep_one_infrastructure_construction = yes
+										}
+									}
+									else = {
+										CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
+									}
+								}
+							}
 						}
 					}
-					else = { # CM_construction_focus_ID = 30
-						CM_calculate_country_variables_for_automatic_naval_dockyards_construction = yes
+					
+					if = {
+						limit = { CM_any_defined_scopes_have_possible_free_naval_dockyards_slots = yes } 
 						
-						for_each_scope_loop = {
-							array = CM_infrastructure_construction_targets
-							
-							if = {
-								limit = { check_variable = { CM_ROI_coefficient?1 = 1 } }
-								
-								if = {
-									limit = {
-										check_variable = {
-											var = CM_possible_num_of_civilian_factories_available_for_projects
-											compare = greater_than_or_equals
-											value = 15
-										}
-									}
-									
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = dockyard
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_naval_dockyards_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_fastest_ROI_full_line = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-								else = {
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = dockyard
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_naval_dockyards_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_fastest_ROI = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-							}
-							else_if = {
-								limit = { check_variable = { CM_ROI_coefficient = 2 } }
-								
-								if = {
-									limit = {
-										check_variable = {
-											var = CM_possible_num_of_civilian_factories_available_for_projects
-											compare = greater_than_or_equals
-											value = 15
-										}
-									}
-									
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = dockyard
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_naval_dockyards_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_optimal_ROI_full_line = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-								else = {
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = dockyard
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_naval_dockyards_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_optimal_ROI = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-							}
-							else = { # CM_ROI_coefficient = 3
-								CM_calculate_min_num_of_infrastructure_for_construction = yes
-								
-								if = {
-									limit = {
-										check_variable = {
-											var = CM_possible_num_of_civilian_factories_available_for_projects
-											compare = greater_than_or_equals
-											value = 15
-										}
-									}
-									
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = dockyard
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_naval_dockyards_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_maximum_ROI_full_line = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-								else = {
-									for_each_scope_loop = {
-										array = CM_infrastructure_construction_targets
-										break = cm_unnecessary_infrastructure_breaker
-										
-										add_building_construction = {
-											type = infrastructure
-											level = 1
-											instant_build = no
-										}
-										
-										if = {
-											limit = { ROOT = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories } } }
-											
-											if = {
-												limit = {
-													free_building_slots = {
-														building = dockyard
-														size > 0
-														include_locked = no
-													}
-												}
-												
-												CM_find_temp_num_of_free_naval_dockyards_slots = yes
-												
-												if = {
-													limit = { check_variable = { CM_temp_num_of_possible_free_building_slots < CM_num_of_possible_free_building_slots } }
-													
-													CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_temp_num_of_free_IC_slots_for_maximum_ROI = yes
-													CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = yes
-												}
-												else = {
-													CM_keep_one_infrastructure_construction = yes
-												}
-											}
-											else = {
-												CM_keep_one_infrastructure_construction = yes
-											}
-										}
-										else = {
-											CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
-										}
-									}
-								}
-							}
-						}
-						
-						if = {
-							limit = { CM_any_defined_scopes_have_possible_free_naval_dockyards_slots = yes } 
-							
-							CM_add_multiple_naval_dockyards_and_infrastructure_constructions = yes
-						}
-						else = {
-							clear_variable = CM_construction_focus_ID
-						}
+						CM_add_naval_dockyards_and_infrastructure_constructions = yes
+					}
+					else = {
+						clear_variable = CM_construction_focus_ID
 					}
 				}
 			}

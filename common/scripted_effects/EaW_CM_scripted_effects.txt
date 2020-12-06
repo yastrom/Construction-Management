@@ -50,13 +50,39 @@ CM_calculate_temp_num_of_unconstructed_infrastructure = {
 	subtract_from_temp_variable = { CM_temp_num_of_unconstructed_infrastructure = infrastructure_level }
 }
 
+CM_calculate_num_of_days_for_infrastructure_construction_with_full_line = {
+	set_temp_variable = { CM_temp_infrastructure_construction_cost = 200 } # 3000 / 15
+	divide_temp_variable = { CM_temp_infrastructure_construction_cost = CM_temp_state_infrastructure_construction_speed }
+	
+	set_temp_variable = { CM_temp_num_of_days_for_infrastructure_constructions = CM_temp_infrastructure_construction_cost }
+}
+CM_calculate_num_of_days_for_infrastructure_construction = {
+	set_temp_variable = { CM_temp_infrastructure_construction_cost = 3000 }
+	divide_temp_variable = { CM_temp_infrastructure_construction_cost = CM_temp_state_infrastructure_construction_speed }
+	divide_temp_variable = { CM_temp_infrastructure_construction_cost = ROOT.CM_possible_num_of_civilian_factories_available_for_projects }
+	
+	set_temp_variable = { CM_temp_num_of_days_for_infrastructure_constructions = CM_temp_infrastructure_construction_cost }
+}
+
 CM_calculate_variables_for_targeted_buildings_and_infrastructure_construction_iterations = {
-	set_temp_variable = { CM_temp_num_of_possible_free_building_slots = CM_num_of_possible_free_building_slots }
 	set_temp_variable = { CM_temp_num_of_civilian_factories_available_for_construction_line = ROOT.CM_possible_num_of_civilian_factories_available_for_projects }
+	set_temp_variable = { CM_temp_num_of_possible_free_building_slots = CM_num_of_possible_free_building_slots }
 	set_temp_variable = { CM_temp_average_num_of_days_for_targeted_building_construction = 0 }
 	
 	set_temp_variable = { CM_temp_proportion_of_unavailable_industrial_complex = CM_temp_true_num_of_unavailable_industrial_complexes }
 	subtract_from_temp_variable = { CM_temp_proportion_of_unavailable_industrial_complex = CM_temp_actual_num_of_unavailable_industrial_complexes }
+}
+
+CM_calculate_num_of_days_for_targeted_building_and_infrastructure_construction = {
+	divide_temp_variable = { CM_temp_num_of_days_for_targeted_building_construction = CM_temp_state_targeted_building_changeable_construction_speed }
+	divide_temp_variable = { CM_temp_num_of_days_for_targeted_building_construction = CM_temp_num_of_civilian_factories_available_for_construction_line }
+	
+	add_to_temp_variable = { CM_temp_average_num_of_days_for_targeted_building_construction = CM_temp_num_of_days_for_targeted_building_construction }
+}
+CM_calculate_num_of_days_for_targeted_building_construction = {
+	set_temp_variable = { CM_temp_num_of_days_for_targeted_building_construction = CM_temp_targeted_building_construction_cost }
+	divide_temp_variable = { CM_temp_num_of_days_for_targeted_building_construction = CM_temp_num_of_civilian_factories_available_for_construction_line }
+	add_to_variable = { CM_average_num_of_days_for_targeted_building_construction = CM_temp_num_of_days_for_targeted_building_construction }
 }
 
 CM_calculate_average_num_of_days_for_targeted_building_and_infrastructure_construction_with_full_line = {
@@ -68,34 +94,9 @@ CM_calculate_average_num_of_days_for_targeted_building_and_infrastructure_constr
 	
 	add_to_temp_variable = { CM_temp_average_num_of_days_for_targeted_building_construction = CM_temp_average_num_of_days_for_infrastructure_construction }
 }
-
-CM_calculate_num_of_days_for_targeted_building_and_infrastructure_construction = {
-	divide_temp_variable = { CM_temp_num_of_days_for_targeted_building_construction = CM_temp_state_targeted_building_changeable_construction_speed }
-	divide_temp_variable = { CM_temp_num_of_days_for_targeted_building_construction = CM_temp_num_of_civilian_factories_available_for_construction_line }
-	
-	add_to_temp_variable = { CM_temp_average_num_of_days_for_targeted_building_construction = CM_temp_num_of_days_for_targeted_building_construction }
-}
 CM_calculate_average_num_of_days_for_targeted_building_and_infrastructure_construction = {
 	add_to_temp_variable = { CM_temp_average_num_of_days_for_targeted_building_construction = CM_temp_num_of_days_for_infrastructure_constructions }
 	divide_temp_variable = { CM_temp_average_num_of_days_for_targeted_building_construction = CM_num_of_possible_free_building_slots }
-}
-
-CM_calculate_num_of_days_for_targeted_building_construction = {
-	set_temp_variable = { CM_temp_num_of_days_for_targeted_building_construction = CM_temp_targeted_building_construction_cost }
-	divide_temp_variable = { CM_temp_num_of_days_for_targeted_building_construction = CM_temp_num_of_civilian_factories_available_for_construction_line }
-	add_to_variable = { CM_average_num_of_days_for_targeted_building_construction = CM_temp_num_of_days_for_targeted_building_construction }
-}
-
-CM_calculate_num_of_days_for_infrastructure_construction_with_full_line = {
-	set_temp_variable = { CM_temp_infrastructure_construction_cost = 200 } # 3000 / 15
-	divide_temp_variable = { CM_temp_infrastructure_construction_cost = CM_temp_state_infrastructure_construction_speed }
-	set_temp_variable = { CM_temp_num_of_days_for_infrastructure_constructions = CM_temp_infrastructure_construction_cost }
-}
-CM_calculate_num_of_days_for_infrastructure_construction = {
-	set_temp_variable = { CM_temp_infrastructure_construction_cost = 3000 }
-	divide_temp_variable = { CM_temp_infrastructure_construction_cost = CM_temp_state_infrastructure_construction_speed }
-	divide_temp_variable = { CM_temp_infrastructure_construction_cost = ROOT.CM_possible_num_of_civilian_factories_available_for_projects }
-	set_temp_variable = { CM_temp_num_of_days_for_infrastructure_constructions = CM_temp_infrastructure_construction_cost }
 }
 
 CM_remove_from_possible_construction_targets_array = {
@@ -158,7 +159,7 @@ CM_reset_targeted_building_and_infrastructure_construction_parameters_for_optima
 			check_variable = {
 				var = CM_temp_average_num_of_days_for_targeted_building_construction
 				compare = less_than_or_equals
-				value = CM_temp_non_infrastructure_average_num_of_days_for_targeted_building_construction
+				value = CM_temp_current_infrastructure_average_num_of_days_for_targeted_building_construction
 			}
 		}
 		
@@ -174,7 +175,7 @@ CM_reset_targeted_building_and_infrastructure_construction_parameters_for_maximu
 			check_variable = {
 				var = CM_temp_average_num_of_days_for_targeted_building_construction
 				compare = less_than_or_equals
-				value = CM_temp_non_infrastructure_average_num_of_days_for_targeted_building_construction
+				value = CM_temp_current_infrastructure_average_num_of_days_for_targeted_building_construction
 			}
 		}
 		
@@ -241,7 +242,13 @@ CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = {
 	set_temp_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories }
 	
 	if = {
+		limit = { check_variable = { ROOT.CM_infrastructure_construction_targets^num = 0 } }
+		
+		clear_array = ROOT.CM_infrastructure_construction_targets
+	}
+	else_if = {
 		limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = 0 } }
+		
 		set_temp_variable = { cm_unnecessary_infrastructure_breaker = 1 }
 	}
 }
@@ -307,7 +314,7 @@ CM_keep_one_infrastructure_construction = {
 	CM_remove_unnecessary_infrastructure_for_shared_buildings_constructions = yes
 }
 
-CM_add_to_targeted_infrastructure_construction = {
+CM_add_targeted_infrastructure_construction = {
 	set_temp_variable = { CM_temp_targeted_infrastructure_level = CM_targeted_infrastructure_level }
 	subtract_from_temp_variable = { CM_temp_targeted_infrastructure_level = 1 }
 	
@@ -332,21 +339,26 @@ CM_check_infrastructure_construction_targets_for_ongoing_construction = {
 			limit = { check_variable = { CM_temp_num_of_available_civilian_factories_for_check = ROOT.num_of_available_civilian_factories } }
 			
 			CM_remove_unnecessary_infrastructure_for_shared_buildings_constructions = yes
-			CM_add_to_targeted_infrastructure_construction = yes
+			CM_add_targeted_infrastructure_construction = yes
 		}
 		else = {
 			CM_stop_unnecessary_infrastructure_constructions_for_shared_buildings = yes
 		}
 		
-		print_variables = {
-			file = CM_log_file
-			text = CM_country_industrial_complexes_calculation_variables
-			append = yes
-		}
+		#print_variables = {
+		#	file = CM_log_file
+		#	text = CM_country_infrastructure_calculation_variables
+		#	append = yes
+		#}
 	}
 }
 
-CM_update_infrastructure_construction_targets_array_on_set_construction_focus = {
+CM_check_infrastructure_construction_targets_for_ongoing_construction_with_temp_variable_for_check = {
+	set_temp_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories }
+	
+	CM_check_infrastructure_construction_targets_for_ongoing_construction = yes
+}
+CM_update_infrastructure_construction_targets_array = {
 	if = {
 		limit = { check_variable = { CM_infrastructure_construction_targets^num > 0 } }
 		
@@ -355,11 +367,11 @@ CM_update_infrastructure_construction_targets_array_on_set_construction_focus = 
 		if = {
 			limit = { check_variable = { CM_infrastructure_construction_targets^num > 0 } }
 			
-			set_temp_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories }
-			CM_check_infrastructure_construction_targets_for_ongoing_construction = yes
+			CM_check_infrastructure_construction_targets_for_ongoing_construction_with_temp_variable_for_check = yes
 		}
 	}
 }
+
 CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = {
 	if = {
 		limit = { check_variable = { CM_num_of_infrastructure_for_construction < CM_temp_num_of_unconstructed_infrastructure } }
@@ -372,7 +384,7 @@ CM_adjust_unnecessary_infrastructure_for_targeted_building_construction = {
 		if = {
 			limit = { check_variable = { CM_num_of_infrastructure_for_construction > 0 } }
 			
-			CM_add_to_targeted_infrastructure_construction = yes
+			CM_add_targeted_infrastructure_construction = yes
 		}
 	}
 	
@@ -389,8 +401,8 @@ CM_calculate_infrastructure_resources_coefficients = {
 	subtract_from_variable = { CM_state_infrastructure_construction_speed = modifier@state_production_speed_buildings_factor }
 	subtract_from_variable = { CM_state_infrastructure_construction_speed = modifier@state_production_speed_infrastructure_factor }
 	
-	set_variable = { CM_infrastructure_impact_on_resources = CM_state_infrastructure_construction_speed }
-	divide_variable = { CM_infrastructure_impact_on_resources = 10 }
+	set_variable = { CM_state_infrastructure_impact_on_resources = CM_state_infrastructure_construction_speed }
+	divide_variable = { CM_state_infrastructure_impact_on_resources = 10 }
 	
 	if = {
 		limit = { infrastructure > 0 }
@@ -399,13 +411,13 @@ CM_calculate_infrastructure_resources_coefficients = {
 		divide_temp_variable = { CM_temp_infrastructure_bonus_resources_value_multiplier = 10 }
 		add_to_temp_variable = { CM_temp_infrastructure_bonus_resources_value_multiplier = 1 }
 		
-		divide_variable = { CM_infrastructure_impact_on_resources = CM_temp_infrastructure_bonus_resources_value_multiplier }
+		divide_variable = { CM_state_infrastructure_impact_on_resources = CM_temp_infrastructure_bonus_resources_value_multiplier }
 	}
 	
 	if = {
 		limit = { check_variable = { resource@steel > 0 } }
 		add_to_array = { CM_state_resources_coefficients = resource@steel }
-		multiply_variable = { CM_state_resources_coefficients^0 = CM_infrastructure_impact_on_resources }
+		multiply_variable = { CM_state_resources_coefficients^0 = CM_state_infrastructure_impact_on_resources }
 	}
 	else = {
 		add_to_array = { CM_state_resources_coefficients = 0 }
@@ -413,7 +425,7 @@ CM_calculate_infrastructure_resources_coefficients = {
 	if = {
 		limit = { check_variable = { resource@crystals > 0 } }
 		add_to_array = { CM_state_resources_coefficients = resource@crystals }
-		multiply_variable = { CM_state_resources_coefficients^1 = CM_infrastructure_impact_on_resources }
+		multiply_variable = { CM_state_resources_coefficients^1 = CM_state_infrastructure_impact_on_resources }
 	}
 	else = {
 		add_to_array = { CM_state_resources_coefficients = 0 }
@@ -421,7 +433,7 @@ CM_calculate_infrastructure_resources_coefficients = {
 	if = {
 		limit = { check_variable = { resource@tungsten > 0 } }
 		add_to_array = { CM_state_resources_coefficients = resource@tungsten }
-		multiply_variable = { CM_state_resources_coefficients^2 = CM_infrastructure_impact_on_resources }
+		multiply_variable = { CM_state_resources_coefficients^2 = CM_state_infrastructure_impact_on_resources }
 	}
 	else = {
 		add_to_array = { CM_state_resources_coefficients = 0 }
@@ -429,7 +441,7 @@ CM_calculate_infrastructure_resources_coefficients = {
 	if = {
 		limit = { check_variable = { resource@aluminium > 0 } }
 		add_to_array = { CM_state_resources_coefficients = resource@aluminium }
-		multiply_variable = { CM_state_resources_coefficients^3 = CM_infrastructure_impact_on_resources }
+		multiply_variable = { CM_state_resources_coefficients^3 = CM_state_infrastructure_impact_on_resources }
 	}
 	else = {
 		add_to_array = { CM_state_resources_coefficients = 0 }
@@ -437,7 +449,7 @@ CM_calculate_infrastructure_resources_coefficients = {
 	if = {
 		limit = { check_variable = { resource@rubber > 0 } }
 		add_to_array = { CM_state_resources_coefficients = resource@rubber }
-		multiply_variable = { CM_state_resources_coefficients^4 = CM_infrastructure_impact_on_resources }
+		multiply_variable = { CM_state_resources_coefficients^4 = CM_state_infrastructure_impact_on_resources }
 	}
 	else = {
 		add_to_array = { CM_state_resources_coefficients = 0 }
@@ -445,7 +457,7 @@ CM_calculate_infrastructure_resources_coefficients = {
 	if = {
 		limit = { check_variable = { resource@chromium > 0 } }
 		add_to_array = { CM_state_resources_coefficients = resource@chromium }
-		multiply_variable = { CM_state_resources_coefficients^5 = CM_infrastructure_impact_on_resources }
+		multiply_variable = { CM_state_resources_coefficients^5 = CM_state_infrastructure_impact_on_resources }
 	}
 	else = {
 		add_to_array = { CM_state_resources_coefficients = 0 }
@@ -453,13 +465,19 @@ CM_calculate_infrastructure_resources_coefficients = {
 	if = {
 		limit = { check_variable = { resource@oil > 0 } }
 		add_to_array = { CM_state_resources_coefficients = resource@oil }
-		multiply_variable = { CM_state_resources_coefficients^6 = CM_infrastructure_impact_on_resources }
+		multiply_variable = { CM_state_resources_coefficients^6 = CM_state_infrastructure_impact_on_resources }
 	}
 	else = {
 		add_to_array = { CM_state_resources_coefficients = 0 }
 	}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
+	
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_infrastructure_calculation_variables
+	#	append = yes
+	#}
 }
 
 CM_adjust_country_resources_array = {
@@ -470,43 +488,43 @@ CM_adjust_country_resources_array = {
 		limit = { check_variable = { resource@steel > 0 } }
 		set_temp_variable = { CM_temp_infrastructure_bonus_resource_value = CM_state_resources_coefficients^0 }
 		multiply_temp_variable = { CM_temp_infrastructure_bonus_resource_value = CM_temp_infrastructure_bonus_resources_value_multiplier }
-		add_to_variable = { ROOT.CM_country_resources_array^0 = CM_temp_infrastructure_bonus_resource_value }
+		subtract_from_variable = { ROOT.CM_country_resources_array^0 = CM_temp_infrastructure_bonus_resource_value }
 	}
 	if = {
 		limit = { check_variable = { resource@crystals > 0 } }
 		set_temp_variable = { CM_temp_infrastructure_bonus_resource_value = CM_state_resources_coefficients^1 }
 		multiply_temp_variable = { CM_temp_infrastructure_bonus_resource_value = CM_temp_infrastructure_bonus_resources_value_multiplier }
-		add_to_variable = { ROOT.CM_country_resources_array^1 = CM_temp_infrastructure_bonus_resource_value }
+		subtract_from_variable = { ROOT.CM_country_resources_array^1 = CM_temp_infrastructure_bonus_resource_value }
 	}
 	if = {
 		limit = { check_variable = { resource@tungsten > 0 } }
 		set_temp_variable = { CM_temp_infrastructure_bonus_resource_value = CM_state_resources_coefficients^2 }
 		multiply_temp_variable = { CM_temp_infrastructure_bonus_resource_value = CM_temp_infrastructure_bonus_resources_value_multiplier }
-		add_to_variable = { ROOT.CM_country_resources_array^2 = CM_temp_infrastructure_bonus_resource_value }
+		subtract_from_variable = { ROOT.CM_country_resources_array^2 = CM_temp_infrastructure_bonus_resource_value }
 	}
 	if = {
 		limit = { check_variable = { resource@aluminium > 0 } }
 		set_temp_variable = { CM_temp_infrastructure_bonus_resource_value = CM_state_resources_coefficients^3 }
 		multiply_temp_variable = { CM_temp_infrastructure_bonus_resource_value = CM_temp_infrastructure_bonus_resources_value_multiplier }
-		add_to_variable = { ROOT.CM_country_resources_array^3 = CM_temp_infrastructure_bonus_resource_value }
+		subtract_from_variable = { ROOT.CM_country_resources_array^3 = CM_temp_infrastructure_bonus_resource_value }
 	}
 	if = {
 		limit = { check_variable = { resource@rubber > 0 } }
 		set_temp_variable = { CM_temp_infrastructure_bonus_resource_value = CM_state_resources_coefficients^4 }
 		multiply_temp_variable = { CM_temp_infrastructure_bonus_resource_value = CM_temp_infrastructure_bonus_resources_value_multiplier }
-		add_to_variable = { ROOT.CM_country_resources_array^4 = CM_temp_infrastructure_bonus_resource_value }
+		subtract_from_variable = { ROOT.CM_country_resources_array^4 = CM_temp_infrastructure_bonus_resource_value }
 	}
 	if = {
 		limit = { check_variable = { resource@chromium > 0 } }
 		set_temp_variable = { CM_temp_infrastructure_bonus_resource_value = CM_state_resources_coefficients^5 }
 		multiply_temp_variable = { CM_temp_infrastructure_bonus_resource_value = CM_temp_infrastructure_bonus_resources_value_multiplier }
-		add_to_variable = { ROOT.CM_country_resources_array^5 = CM_temp_infrastructure_bonus_resource_value }
+		subtract_from_variable = { ROOT.CM_country_resources_array^5 = CM_temp_infrastructure_bonus_resource_value }
 	}
 	if = {
 		limit = { check_variable = { resource@oil > 0 } }
 		set_temp_variable = { CM_temp_infrastructure_bonus_resource_value = CM_state_resources_coefficients^6 }
 		multiply_temp_variable = { CM_temp_infrastructure_bonus_resource_value = CM_temp_infrastructure_bonus_resources_value_multiplier }
-		add_to_variable = { ROOT.CM_country_resources_array^6 = CM_temp_infrastructure_bonus_resource_value }
+		subtract_from_variable = { ROOT.CM_country_resources_array^6 = CM_temp_infrastructure_bonus_resource_value }
 	}
 }
 
@@ -524,12 +542,6 @@ CM_create_cored_owned_controlled_states_array_for_infrastructure_construction = 
 		if = {
 			limit = { CM_is_owned_and_controlled_with_possible_free_infrastructure_slots = yes }
 			CM_calculate_infrastructure_resources_coefficients = yes
-			
-			print_variables = {
-				file = CM_log_file
-				text = CM_country_industrial_complexes_calculation_variables
-				append = yes
-			}
 		}
 	}
 }
@@ -545,6 +557,18 @@ CM_create_controlled_states_array_for_infrastructure_construction = {
 		array = controlled_states
 		
 		CM_calculate_infrastructure_resources_coefficients_if_has_resources_with_free_infrastructure_slots = yes
+	}
+}
+
+CM_there_is_no_shortage_of_resources = {
+	NOT = {
+		check_variable = { resource@steel < 0 }
+		check_variable = { resource@crystals < 0 }
+		check_variable = { resource@tungsten < 0 }
+		check_variable = { resource@aluminium < 0 }
+		check_variable = { resource@rubber < 0 }
+		check_variable = { resource@chromium < 0 }
+		fuel_ratio < 0.5
 	}
 }
 
@@ -572,17 +596,7 @@ CM_create_possible_infrastructure_targets_array = {
 	}
 	
 	if = {
-		limit = {
-			NOT = {
-				check_variable = { resource@steel < 0 }
-				check_variable = { resource@crystals < 0 }
-				check_variable = { resource@tungsten < 0 }
-				check_variable = { resource@aluminium < 0 }
-				check_variable = { resource@rubber < 0 }
-				check_variable = { resource@chromium < 0 }
-				check_variable = { fuel_ratio < 0.5 }
-			}
-		}
+		limit = { CM_there_is_no_shortage_of_resources = yes }
 		
 		set_country_flag = CM_imported_resources_has_been_removed_flag
 		
@@ -595,17 +609,7 @@ CM_create_possible_infrastructure_targets_array = {
 		subtract_from_variable = { CM_country_resources_array^6 = resource_imported@oil }
 		
 		if = {
-			limit = {
-				NOT = {
-					check_variable = { resource@steel < 0 }
-					check_variable = { resource@crystals < 0 }
-					check_variable = { resource@tungsten < 0 }
-					check_variable = { resource@aluminium < 0 }
-					check_variable = { resource@rubber < 0 }
-					check_variable = { resource@chromium < 0 }
-					check_variable = { fuel_ratio < 0.5 }
-				}
-			}
+			limit = { CM_there_is_no_shortage_of_resources = yes }
 			
 			set_country_flag = CM_consumed_resources_has_been_added_flag
 			set_country_flag = CM_non_consumed_resources_has_been_added_flag
@@ -641,7 +645,7 @@ CM_create_possible_infrastructure_targets_array = {
 				clr_country_flag = CM_non_consumed_resources_has_been_added_flag
 			}
 			if = {
-				limit = { NOT = { check_variable = { fuel_ratio < 0.95 } } }
+				limit = { NOT = { fuel_ratio < 0.95 } }
 				add_to_variable = { CM_country_resources_array^6 = 10000 }
 				clr_country_flag = CM_non_consumed_resources_has_been_added_flag
 			}
@@ -734,13 +738,13 @@ CM_add_oil_coefficient_to_state_sum_of_infrastructure_bonus_resources_if_needed 
 
 CM_clear_state_resources_infastructure_objects = {
 	clear_variable = CM_state_sum_of_infrastructure_bonus_resources
-	clear_variable = CM_infrastructure_impact_on_resources
+	clear_variable = CM_state_infrastructure_impact_on_resources
 	clear_variable = CM_state_infrastructure_construction_speed
 	
 	clear_array = CM_state_resources_coefficients
 }
 
-CM_add_infrastructure_construction = {
+CM_add_infrastructure_construction_effect = {
 	if = {
 		limit = { has_country_flag = CM_non_consumed_resources_has_been_added_flag }
 		
@@ -826,7 +830,7 @@ CM_add_infrastructure_construction = {
 		}
 		if = {
 			limit = {
-				check_variable = { fuel_ratio < 0.95 }
+				fuel_ratio < 0.95
 				check_variable = { resource_produced@oil > 0 }
 			}
 			
@@ -968,7 +972,7 @@ CM_add_infrastructure_construction = {
 		}
 		if = {
 			limit = {
-				check_variable = { fuel_ratio < 0.5 }
+				fuel_ratio < 0.5
 				check_variable = { resource_produced@oil > 0 }
 			}
 			
@@ -1016,6 +1020,20 @@ CM_add_infrastructure_construction = {
 			array = ROOT.CM_possible_construction_targets
 			value = THIS
 		}
+	}
+}
+
+CM_prepare_possible_infrastructure_construction_targets_for_next_iteration = {
+	if = {
+		limit = { CM_possible_new_target_array_for_infrastructure = yes }
+		
+		CM_recreate_infrastructure_targets_array = yes
+	}
+	
+	for_each_scope_loop = {
+		array = CM_possible_construction_targets
+		
+		set_variable = { CM_state_sum_of_infrastructure_bonus_resources = 0 }
 	}
 }
 
@@ -1079,7 +1097,7 @@ CM_include_consumed_resources = {
 		add_to_variable = { CM_country_resources_array^5 = 10000 }
 	}
 	if = {
-		limit = { NOT = { check_variable = { fuel_ratio < 0.95 } } }
+		limit = { NOT = { fuel_ratio < 0.95 } }
 		add_to_variable = { CM_country_resources_array^6 = 10000 }
 	}
 }
@@ -1311,13 +1329,38 @@ CM_remove_infrastructure_construction_objects = {
 	clear_array = CM_country_resources_array
 }
 
-CM_add_multiple_infrastructure_constructions = {
+CM_add_infrastructure_construction = {
 	CM_create_possible_infrastructure_targets_array = yes
 	
 	while_loop_effect = {
 		limit = { always = yes } # do_while
 		
-		CM_add_infrastructure_construction = yes
+		CM_add_infrastructure_construction_effect = yes
+		
+		if = {
+			limit = {
+				OR = {
+					check_variable = { CM_temp_num_of_available_civilian_factories_for_check > num_of_available_civilian_factories }
+					CM_no_possible_construction_sites_for_infrastructure = yes
+				}
+			}
+			
+			set_temp_variable = { break = 1 }
+		}
+		else = {
+			CM_prepare_possible_infrastructure_construction_targets_for_next_iteration = yes
+		}
+	}
+	
+	CM_remove_infrastructure_construction_objects = yes
+}
+CM_add_infrastructure_constructions = {
+	CM_create_possible_infrastructure_targets_array = yes
+	
+	while_loop_effect = {
+		limit = { always = yes } # do_while
+		
+		CM_add_infrastructure_construction_effect = yes
 		
 		if = {
 			limit = {
@@ -1329,18 +1372,16 @@ CM_add_multiple_infrastructure_constructions = {
 			
 			set_temp_variable = { break = 1 }
 		}
-		else_if = {
-			limit = { CM_possible_new_target_array_for_infrastructure = yes }
-			
-			CM_recreate_infrastructure_targets_array = yes
-		}
-		
-		for_each_scope_loop = {
-			array = CM_possible_construction_targets
-			
-			set_variable = { CM_state_sum_of_infrastructure_bonus_resources = 0 }
+		else = {
+			CM_prepare_possible_infrastructure_construction_targets_for_next_iteration = yes
 		}
 	}
+	
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_country_infrastructure_calculation_variables
+	#	append = yes
+	#}
 	
 	CM_remove_infrastructure_construction_objects = yes
 }
@@ -1482,7 +1523,7 @@ CM_IC_num_of_available_civilian_factories_is_zero = {
 	}
 }
 
-CM_add_multiple_industrial_complexes_constructions = {
+CM_add_industrial_complexes_constructions = {
 	CM_create_possible_industrial_complexes_targets_array = yes
 	
 	while_loop_effect = {
@@ -1660,11 +1701,6 @@ CM_find_num_of_free_industrial_complexes_slots = {
 	}
 }
 
-CM_calculate_variables_for_industrial_complexes_and_infrastructure_construction_iterations = {
-	CM_calculate_variables_for_targeted_buildings_and_infrastructure_construction_iterations = yes
-	set_temp_variable = { CM_temp_num_of_civilian_factories_available_for_construction_line = ROOT.CM_possible_num_of_civilian_factories_available_for_projects }
-}
-
 CM_check_condition_for_the_next_industrial_complexes_construction_iteration = {
 	if = {
 		limit = { check_variable = { CM_temp_num_of_possible_free_building_slots = 1 } }
@@ -1698,7 +1734,7 @@ CM_check_condition_for_the_next_industrial_complexes_construction_iteration = {
 CM_calculate_average_num_of_days_for_industrial_complexes_and_infastructure_construction_with_full_line = {
 	set_temp_variable = { CM_temp_average_num_of_days_for_targeted_building_construction = 720 } # 10800 / 15
 	
-	CM_calculate_variables_for_industrial_complexes_and_infrastructure_construction_iterations = yes
+	CM_calculate_average_num_of_days_for_targeted_building_and_infrastructure_construction_with_full_line = yes
 }
 CM_calculate_average_num_of_days_for_industrial_complexes_and_infastructure_constructions = {
 	add_to_temp_variable = { CM_temp_state_targeted_building_changeable_construction_speed = 0.1 }
@@ -1722,19 +1758,19 @@ CM_add_state_industrial_complexes_construction_speed = {
 	add_to_temp_variable = { CM_temp_state_targeted_building_construction_speed = modifier@state_production_speed_buildings_factor }
 	add_to_temp_variable = { CM_temp_state_targeted_building_construction_speed = modifier@state_production_speed_industrial_complex_factor }
 }
-CM_calculate_variables_for_multiple_industrial_complexes_and_infrastructure_constructions = {
+CM_calculate_variables_for_industrial_complexes_and_infrastructure_constructions = {
 	CM_calculate_state_infrastructure_construction_speed_and_unconstructed_infrastructure_levels = yes
 	CM_add_state_industrial_complexes_construction_speed = yes
 	
 	set_temp_variable = { CM_temp_state_targeted_building_changeable_construction_speed = CM_temp_state_targeted_building_construction_speed }
 }
-
-CM_calculate_average_num_of_days_for_industrial_complexes_construction_with_full_line = {
+CM_calculate_current_infrastructure_average_num_of_days_for_industrial_complex_construction = {
 	set_variable = { CM_average_num_of_days_for_targeted_building_construction = 720 } # 10800 / 15
 	divide_variable = { CM_average_num_of_days_for_targeted_building_construction = CM_temp_state_targeted_building_construction_speed }
 }
-CM_calculate_average_num_of_days_for_industrial_complexes_constructions = {
-	CM_calculate_variables_for_industrial_complexes_and_infrastructure_construction_iterations = yes
+
+CM_calculate_average_num_of_days_for_industrial_complex_construction = {
+	CM_calculate_variables_for_targeted_buildings_and_infrastructure_construction_iterations = yes
 	
 	set_temp_variable = { CM_temp_targeted_building_construction_cost = 10800 }
 	divide_temp_variable = { CM_temp_targeted_building_construction_cost = CM_temp_state_targeted_building_construction_speed }
@@ -1751,32 +1787,33 @@ CM_calculate_average_num_of_days_for_industrial_complexes_constructions = {
 }
 
 CM_define_basic_industrial_complexes_and_infrastructure_construction_objects_with_full_line = {
-	CM_calculate_variables_for_multiple_industrial_complexes_and_infrastructure_constructions = yes
+	CM_calculate_variables_for_industrial_complexes_and_infrastructure_constructions = yes
 	CM_calculate_num_of_days_for_infrastructure_construction_with_full_line = yes
-	CM_calculate_average_num_of_days_for_industrial_complexes_construction_with_full_line = yes
+	CM_calculate_current_infrastructure_average_num_of_days_for_industrial_complex_construction = yes
 	
-	set_temp_variable = { CM_temp_non_infrastructure_average_num_of_days_for_targeted_building_construction = CM_average_num_of_days_for_targeted_building_construction }
+	set_temp_variable = { CM_temp_current_infrastructure_average_num_of_days_for_targeted_building_construction = CM_average_num_of_days_for_targeted_building_construction }
 }
 CM_define_basic_industrial_complexes_and_infrastructure_construction_objects = {
-	CM_calculate_variables_for_multiple_industrial_complexes_and_infrastructure_constructions = yes
+	CM_calculate_variables_for_industrial_complexes_and_infrastructure_constructions = yes
 	CM_calculate_num_of_days_for_infrastructure_construction = yes
-	CM_calculate_average_num_of_days_for_industrial_complexes_constructions = yes
+	CM_calculate_average_num_of_days_for_industrial_complex_construction = yes
 	
-	set_temp_variable = { CM_temp_non_infrastructure_average_num_of_days_for_targeted_building_construction = CM_average_num_of_days_for_targeted_building_construction }
+	set_temp_variable = { CM_temp_current_infrastructure_average_num_of_days_for_targeted_building_construction = CM_average_num_of_days_for_targeted_building_construction }
 }
 
 CM_calculate_max_infrastructure_state_industrial_complexes_construction_speed = {
 	set_temp_variable = { CM_temp_state_targeted_building_construction_speed = 2 }
 	add_to_temp_variable = { CM_temp_state_targeted_building_construction_speed = ROOT.modifier@production_speed_industrial_complex_factor }
+
 	CM_add_state_industrial_complexes_construction_speed = yes
 }
 CM_calculate_max_infrastructure_state_average_num_of_days_for_industrial_complexes_construction_with_full_line = {
 	CM_calculate_max_infrastructure_state_industrial_complexes_construction_speed = yes
-	CM_calculate_average_num_of_days_for_industrial_complexes_construction_with_full_line = yes
+	CM_calculate_current_infrastructure_average_num_of_days_for_industrial_complex_construction = yes
 }
 CM_calculate_max_infrastructure_state_average_num_of_days_for_industrial_complexes_construction = {
 	CM_calculate_max_infrastructure_state_industrial_complexes_construction_speed = yes
-	CM_calculate_average_num_of_days_for_industrial_complexes_constructions = yes
+	CM_calculate_average_num_of_days_for_industrial_complex_construction = yes
 }
 
 CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_for_fastest_ROI_with_full_line = {
@@ -1801,11 +1838,11 @@ CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_industrial_complexes_construction_with_full_line = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_industrial_complexes_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_industrial_complexes_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -1831,11 +1868,11 @@ CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_industrial_complexes_construction = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_industrial_complexes_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_industrial_complexes_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -1862,11 +1899,11 @@ CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_industrial_complexes_construction_with_full_line = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_industrial_complexes_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_industrial_complexes_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -1892,11 +1929,11 @@ CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_industrial_complexes_construction = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_industrial_complexes_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_industrial_complexes_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -1923,11 +1960,11 @@ CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_industrial_complexes_construction_with_full_line = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_industrial_complexes_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_industrial_complexes_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -1953,11 +1990,11 @@ CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_industrial_complexes_construction = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_industrial_complexes_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_industrial_complexes_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -2098,25 +2135,19 @@ CM_create_owned_controlled_states_array_for_industrial_complexes_with_infrastruc
 		limit = { check_variable = { CM_ROI_coefficient?1 = 1 } }
 		
 		if = {
-			limit = {
-				check_variable = {
-					var = CM_possible_num_of_civilian_factories_available_for_projects
-					compare = greater_than_or_equals
-					value = 15
-				}
-			}
+			limit = { check_variable = { CM_possible_num_of_civilian_factories_available_for_projects < 15 } }
 			
 			for_each_scope_loop = {
 				array = owned_controlled_states
 				
-				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_full_line_if_has_free_building_slots = yes
+				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_if_has_free_building_slots = yes
 			}
 		}
 		else = {
 			for_each_scope_loop = {
 				array = owned_controlled_states
 				
-				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_if_has_free_building_slots = yes
+				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_full_line_if_has_free_building_slots = yes
 			}
 		}
 	}
@@ -2124,25 +2155,19 @@ CM_create_owned_controlled_states_array_for_industrial_complexes_with_infrastruc
 		limit = { check_variable = { CM_ROI_coefficient = 2 } }
 		
 		if = {
-			limit = {
-				check_variable = {
-					var = CM_possible_num_of_civilian_factories_available_for_projects
-					compare = greater_than_or_equals
-					value = 15
-				}
-			}
+			limit = { check_variable = { CM_possible_num_of_civilian_factories_available_for_projects < 15 } }
 			
 			for_each_scope_loop = {
 				array = owned_controlled_states
 				
-				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_full_line_if_has_free_building_slots = yes
+				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_if_has_free_building_slots = yes
 			}
 		}
 		else = {
 			for_each_scope_loop = {
 				array = owned_controlled_states
 				
-				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_if_has_free_building_slots = yes
+				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_full_line_if_has_free_building_slots = yes
 			}
 		}
 	}
@@ -2150,25 +2175,19 @@ CM_create_owned_controlled_states_array_for_industrial_complexes_with_infrastruc
 		CM_calculate_min_num_of_infrastructure_for_construction = yes
 		
 		if = {
-			limit = {
-				check_variable = {
-					var = CM_possible_num_of_civilian_factories_available_for_projects
-					compare = greater_than_or_equals
-					value = 15
-				}
-			}
+			limit = { check_variable = { CM_possible_num_of_civilian_factories_available_for_projects < 15 } }
 			
 			for_each_scope_loop = {
 				array = owned_controlled_states
 				
-				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_full_line_if_has_free_building_slots = yes
+				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_if_has_free_building_slots = yes
 			}
 		}
 		else = {
 			for_each_scope_loop = {
 				array = owned_controlled_states
 				
-				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_if_has_free_building_slots = yes
+				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_full_line_if_has_free_building_slots = yes
 			}
 		}
 	}
@@ -2178,25 +2197,19 @@ CM_create_controlled_states_array_for_industrial_complexes_and_infrastructure_co
 		limit = { check_variable = { CM_ROI_coefficient?1 = 1 } }
 		
 		if = {
-			limit = {
-				check_variable = {
-					var = CM_possible_num_of_civilian_factories_available_for_projects
-					compare = greater_than_or_equals
-					value = 15
-				}
-			}
+			limit = { check_variable = { CM_possible_num_of_civilian_factories_available_for_projects < 15 } }
 			
 			for_each_scope_loop = {
 				array = controlled_states
 				
-				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_full_line_if_has_free_building_slots = yes
+				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_if_has_free_building_slots = yes
 			}
 		}
 		else = {
 			for_each_scope_loop = {
 				array = controlled_states
 				
-				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_if_has_free_building_slots = yes
+				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_full_line_if_has_free_building_slots = yes
 			}
 		}
 	}
@@ -2204,25 +2217,19 @@ CM_create_controlled_states_array_for_industrial_complexes_and_infrastructure_co
 		limit = { check_variable = { CM_ROI_coefficient = 2 } }
 		
 		if = {
-			limit = {
-				check_variable = {
-					var = CM_possible_num_of_civilian_factories_available_for_projects
-					compare = greater_than_or_equals
-					value = 15
-				}
-			}
+			limit = { check_variable = { CM_possible_num_of_civilian_factories_available_for_projects < 15 } }
 			
 			for_each_scope_loop = {
 				array = controlled_states
 				
-				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_full_line_if_has_free_building_slots = yes
+				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_if_has_free_building_slots = yes
 			}
 		}
 		else = {
 			for_each_scope_loop = {
 				array = controlled_states
 				
-				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_if_has_free_building_slots = yes
+				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_full_line_if_has_free_building_slots = yes
 			}
 		}
 	}
@@ -2230,25 +2237,19 @@ CM_create_controlled_states_array_for_industrial_complexes_and_infrastructure_co
 		CM_calculate_min_num_of_infrastructure_for_construction = yes
 		
 		if = {
-			limit = {
-				check_variable = {
-					var = CM_possible_num_of_civilian_factories_available_for_projects
-					compare = greater_than_or_equals
-					value = 15
-				}
-			}
+			limit = { check_variable = { CM_possible_num_of_civilian_factories_available_for_projects < 15 } }
 			
 			for_each_scope_loop = {
 				array = controlled_states
 				
-				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_full_line_if_has_free_building_slots = yes
+				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_if_has_free_building_slots = yes
 			}
 		}
 		else = {
 			for_each_scope_loop = {
 				array = controlled_states
 				
-				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_if_has_free_building_slots = yes
+				CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_full_line_if_has_free_building_slots = yes
 			}
 		}
 	}
@@ -2278,24 +2279,8 @@ CM_create_possible_industrial_complexes_and_infrastructure_targets_array = {
 			limit = { check_variable = { CM_ROI_coefficient?1 = 1 } }
 			
 			if = {
-				limit = {
-					check_variable = {
-						var = CM_possible_num_of_civilian_factories_available_for_projects
-						compare = greater_than_or_equals
-						value = 15
-					}
-				}
+				limit = { check_variable = { CM_possible_num_of_civilian_factories_available_for_projects < 15 } }
 				
-				for_each_scope_loop = {
-					array = core_states
-					
-					if = {
-						limit = { CM_is_owned_and_controlled_with_free_building_slot_for_industrial_complex = yes }
-						CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_full_line = yes
-					}
-				}
-			}
-			else = {
 				for_each_scope_loop = {
 					array = core_states
 					
@@ -2305,29 +2290,23 @@ CM_create_possible_industrial_complexes_and_infrastructure_targets_array = {
 					}
 				}
 			}
-		}
-		else_if = {
-			limit = { check_variable = { CM_ROI_coefficient = 2 } }
-			
-			if = {
-				limit = {
-					check_variable = {
-						var = CM_possible_num_of_civilian_factories_available_for_projects
-						compare = greater_than_or_equals
-						value = 15
-					}
-				}
-				
+			else = {
 				for_each_scope_loop = {
 					array = core_states
 					
 					if = {
 						limit = { CM_is_owned_and_controlled_with_free_building_slot_for_industrial_complex = yes }
-						CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_full_line = yes
+						CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_full_line = yes
 					}
 				}
 			}
-			else = {
+		}
+		else_if = {
+			limit = { check_variable = { CM_ROI_coefficient = 2 } }
+			
+			if = {
+				limit = { check_variable = { CM_possible_num_of_civilian_factories_available_for_projects < 15 } }
+				
 				for_each_scope_loop = {
 					array = core_states
 					
@@ -2337,25 +2316,29 @@ CM_create_possible_industrial_complexes_and_infrastructure_targets_array = {
 					}
 				}
 			}
+			else = {
+				for_each_scope_loop = {
+					array = core_states
+					
+					if = {
+						limit = { CM_is_owned_and_controlled_with_free_building_slot_for_industrial_complex = yes }
+						CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_full_line = yes
+					}
+				}
+			}
 		}
 		else = { # CM_ROI_coefficient = 3
 			CM_calculate_min_num_of_infrastructure_for_construction = yes
 			
 			if = {
-				limit = {
-					check_variable = {
-						var = CM_possible_num_of_civilian_factories_available_for_projects
-						compare = greater_than_or_equals
-						value = 15
-					}
-				}
+				limit = { check_variable = { CM_possible_num_of_civilian_factories_available_for_projects < 15 } }
 				
 				for_each_scope_loop = {
 					array = core_states
 					
 					if = {
 						limit = { CM_is_owned_and_controlled_with_free_building_slot_for_industrial_complex = yes }
-						CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_full_line = yes
+						CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI = yes
 					}
 				}
 			}
@@ -2365,7 +2348,7 @@ CM_create_possible_industrial_complexes_and_infrastructure_targets_array = {
 					
 					if = {
 						limit = { CM_is_owned_and_controlled_with_free_building_slot_for_industrial_complex = yes }
-						CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI = yes
+						CM_calculate_state_industrial_complexes_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_full_line = yes
 					}
 				}
 			}
@@ -2380,14 +2363,14 @@ CM_create_possible_industrial_complexes_and_infrastructure_targets_array = {
 	}
 }
 
-CM_add_multiple_industrial_complexes_and_infrastructure_constructions = {
+CM_add_industrial_complexes_and_infrastructure_constructions = {
 	CM_create_possible_industrial_complexes_and_infrastructure_targets_array = yes
 	
-	print_variables = {
-		file = CM_log_file
-		text = CM_country_industrial_complexes_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_country_industrial_complexes_calculation_variables
+	#	append = yes
+	#}
 	
 	while_loop_effect = {
 		limit = { always = yes } # do_while
@@ -2579,7 +2562,7 @@ CM_add_arms_factories_construction = {
 	}
 }
 
-CM_add_multiple_arms_factories_constructions = {
+CM_add_arms_factories_constructions = {
 	CM_create_possible_arms_factory_targets_array = yes
 	
 	while_loop_effect = {
@@ -2757,11 +2740,6 @@ CM_find_num_of_free_arms_factories_slots = {
 	}
 }
 
-CM_calculate_variables_for_arms_factories_and_infrastructure_construction_iterations = {
-	CM_calculate_variables_for_targeted_buildings_and_infrastructure_construction_iterations = yes
-	set_temp_variable = { CM_temp_num_of_civilian_factories_available_for_construction_line = ROOT.CM_num_of_civilian_factories_available_for_construction_line }
-}
-
 CM_check_condition_for_the_next_arms_factories_construction_iteration = {
 	if = {
 		limit = { check_variable = { CM_temp_num_of_possible_free_building_slots = 1 } }
@@ -2773,13 +2751,17 @@ CM_check_condition_for_the_next_arms_factories_construction_iteration = {
 		
 		if = {
 			limit = { check_variable = { CM_temp_proportion_of_unavailable_industrial_complex > 1 } }
-			subtract_from_temp_variable = { CM_temp_proportion_of_unavailable_industrial_complex = 1 }
-			ROOT = { subtract_from_temp_variable = { CM_possible_num_of_civilian_factories_available_for_projects = 1 } }
 			
-			if = {
-				limit = { check_variable = { CM_possible_num_of_civilian_factories_available_for_projects < 15 } }
+			subtract_from_temp_variable = { CM_temp_proportion_of_unavailable_industrial_complex = 1 }
+			
+			ROOT = {
+				subtract_from_temp_variable = { CM_possible_num_of_civilian_factories_available_for_projects = 1 }
 				
-				set_variable = { CM_temp_num_of_civilian_factories_available_for_construction_line = ROOT.CM_possible_num_of_civilian_factories_available_for_projects }
+				if = {
+					limit = { check_variable = { CM_possible_num_of_civilian_factories_available_for_projects < 15 } }
+					
+					set_variable = { CM_temp_num_of_civilian_factories_available_for_construction_line = CM_possible_num_of_civilian_factories_available_for_projects }
+				}
 			}
 		}
 	}
@@ -2812,17 +2794,17 @@ CM_add_state_arms_factories_construction_speed = {
 	add_to_temp_variable = { CM_temp_state_targeted_building_construction_speed = modifier@state_production_speed_buildings_factor }
 	add_to_temp_variable = { CM_temp_state_targeted_building_construction_speed = modifier@state_production_speed_arms_factory_factor }
 }
-CM_calculate_variables_for_multiple_arms_factories_and_infrastructure_constructions = {
+CM_calculate_variables_for_arms_factories_and_infrastructure_constructions = {
 	CM_calculate_state_infrastructure_construction_speed_and_unconstructed_infrastructure_levels = yes
 	CM_add_state_arms_factories_construction_speed = yes
 	
 	set_temp_variable = { CM_temp_state_targeted_building_changeable_construction_speed = CM_temp_state_targeted_building_construction_speed }
 }
-
-CM_calculate_average_num_of_days_for_arms_factories_construction_with_full_line = {
+CM_calculate_current_infrastructure_average_num_of_days_for_arms_factory_construction = {
 	set_variable = { CM_average_num_of_days_for_targeted_building_construction = 480 } # 7200 / 15
 	divide_variable = { CM_average_num_of_days_for_targeted_building_construction = CM_temp_state_targeted_building_construction_speed }
 }
+
 CM_calculate_average_num_of_days_for_arms_factories_constructions = {
 	CM_calculate_variables_for_targeted_buildings_and_infrastructure_construction_iterations = yes
 	
@@ -2841,28 +2823,29 @@ CM_calculate_average_num_of_days_for_arms_factories_constructions = {
 }
 
 CM_define_basic_arms_factories_and_infrastructure_construction_objects_for_full_line = {
-	CM_calculate_variables_for_multiple_arms_factories_and_infrastructure_constructions = yes
+	CM_calculate_variables_for_arms_factories_and_infrastructure_constructions = yes
 	CM_calculate_num_of_days_for_infrastructure_construction_with_full_line = yes
-	CM_calculate_average_num_of_days_for_arms_factories_construction_with_full_line = yes
+	CM_calculate_current_infrastructure_average_num_of_days_for_arms_factory_construction = yes
 	
-	set_temp_variable = { CM_temp_non_infrastructure_average_num_of_days_for_targeted_building_construction = CM_average_num_of_days_for_targeted_building_construction }
+	set_temp_variable = { CM_temp_current_infrastructure_average_num_of_days_for_targeted_building_construction = CM_average_num_of_days_for_targeted_building_construction }
 }
 CM_define_basic_arms_factories_and_infrastructure_construction_objects = {
-	CM_calculate_variables_for_multiple_arms_factories_and_infrastructure_constructions = yes
+	CM_calculate_variables_for_arms_factories_and_infrastructure_constructions = yes
 	CM_calculate_num_of_days_for_infrastructure_construction = yes
 	CM_calculate_average_num_of_days_for_arms_factories_constructions = yes
 	
-	set_temp_variable = { CM_temp_non_infrastructure_average_num_of_days_for_targeted_building_construction = CM_average_num_of_days_for_targeted_building_construction }
+	set_temp_variable = { CM_temp_current_infrastructure_average_num_of_days_for_targeted_building_construction = CM_average_num_of_days_for_targeted_building_construction }
 }
 
 CM_calculate_max_infrastructure_state_arms_factories_construction_speed = {
 	set_temp_variable = { CM_temp_state_targeted_building_construction_speed = 2 }
 	add_to_temp_variable = { CM_temp_state_targeted_building_construction_speed = ROOT.modifier@production_speed_arms_factory_factor }
+	
 	CM_add_state_arms_factories_construction_speed = yes
 }
 CM_calculate_max_infrastructure_state_average_num_of_days_for_arms_factories_construction_with_full_line = {
 	CM_calculate_max_infrastructure_state_arms_factories_construction_speed = yes
-	CM_calculate_average_num_of_days_for_arms_factories_construction_with_full_line = yes
+	CM_calculate_current_infrastructure_average_num_of_days_for_arms_factory_construction = yes
 }
 CM_calculate_max_infrastructure_state_average_num_of_days_for_arms_factories_construction = {
 	CM_calculate_max_infrastructure_state_arms_factories_construction_speed = yes
@@ -2891,11 +2874,11 @@ CM_calculate_state_arms_factories_and_infrastructure_construction_objects_for_fa
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_arms_factories_construction_with_full_line = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_arms_factories_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_arms_factories_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -2921,11 +2904,11 @@ CM_calculate_state_arms_factories_and_infrastructure_construction_objects_for_fa
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_arms_factories_construction = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_arms_factories_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_arms_factories_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -2952,11 +2935,11 @@ CM_calculate_state_arms_factories_and_infrastructure_construction_objects_for_op
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_arms_factories_construction_with_full_line = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_arms_factories_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_arms_factories_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -2982,11 +2965,11 @@ CM_calculate_state_arms_factories_and_infrastructure_construction_objects_for_op
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_arms_factories_construction = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_arms_factories_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_arms_factories_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -3013,11 +2996,11 @@ CM_calculate_state_arms_factories_and_infrastructure_construction_objects_for_ma
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_arms_factories_construction_with_full_line = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_arms_factories_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_arms_factories_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -3043,11 +3026,11 @@ CM_calculate_state_arms_factories_and_infrastructure_construction_objects_for_ma
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_arms_factories_construction = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_arms_factories_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_arms_factories_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -3360,18 +3343,11 @@ CM_calculate_country_variables_for_automatic_arms_factories_construction = {
 		}
 		
 		if = {
-			limit = {
-				check_variable = {
-					var = ROOT.CM_possible_num_of_civilian_factories_available_for_projects
-					compare = less_than_or_equals
-					value = 15
-				}
-			}
-			
-			set_variable = { CM_num_of_civilian_factories_available_for_construction_line = CM_possible_num_of_civilian_factories_available_for_projects }
+			limit = { check_variable = { ROOT.CM_possible_num_of_civilian_factories_available_for_projects > 15 } }
+			set_temp_variable = { CM_temp_true_num_of_civilian_factories_available_for_construction_line = 15 }
 		}
 		else = {
-			set_variable = { CM_num_of_civilian_factories_available_for_construction_line = 15 }
+			set_temp_variable = { CM_temp_true_num_of_civilian_factories_available_for_construction_line = CM_possible_num_of_civilian_factories_available_for_projects }
 		}
 	}
 }
@@ -3488,14 +3464,14 @@ CM_create_possible_arms_factories_and_infrastructure_targets_array = {
 	}
 }
 
-CM_add_multiple_arms_factories_and_infrastructure_constructions = {
+CM_add_arms_factories_and_infrastructure_constructions = {
 	CM_create_possible_arms_factories_and_infrastructure_targets_array = yes
 	
-	print_variables = {
-		file = CM_log_file
-		text = CM_country_arms_factories_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_country_arms_factories_calculation_variables
+	#	append = yes
+	#}
 	
 	while_loop_effect = {
 		limit = { always = yes } # do_while
@@ -3697,7 +3673,7 @@ CM_add_naval_dockyards_construction = {
 	}
 }
 
-CM_add_multiple_naval_dockyards_constructions = {
+CM_add_naval_dockyards_constructions = {
 	CM_create_possible_naval_dockyard_targets_array = yes
 	
 	while_loop_effect = {
@@ -3875,11 +3851,6 @@ CM_find_num_of_free_naval_dockyards_slots = {
 	}
 }
 
-CM_calculate_variables_for_naval_dockyards_and_infrastructure_construction_iterations = {
-	CM_calculate_variables_for_targeted_buildings_and_infrastructure_construction_iterations = yes
-	set_temp_variable = { CM_temp_num_of_civilian_factories_available_for_construction_line = ROOT.CM_num_of_civilian_factories_available_for_construction_line }
-}
-
 CM_check_condition_for_the_next_naval_dockyards_construction_iteration = {
 	if = {
 		limit = { check_variable = { CM_temp_num_of_possible_free_building_slots = 1 } }
@@ -3917,17 +3888,17 @@ CM_add_state_naval_dockyards_construction_speed = {
 	add_to_temp_variable = { CM_temp_state_targeted_building_construction_speed = modifier@state_production_speed_buildings_factor }
 	add_to_temp_variable = { CM_temp_state_targeted_building_construction_speed = modifier@state_production_speed_dockyard_factor }
 }
-CM_calculate_variables_for_multiple_naval_dockyards_and_infrastructure_constructions = {
+CM_calculate_variables_for_naval_dockyards_and_infrastructure_constructions = {
 	CM_calculate_state_infrastructure_construction_speed_and_unconstructed_infrastructure_levels = yes
 	CM_add_state_naval_dockyards_construction_speed = yes
 	
 	set_temp_variable = { CM_temp_state_targeted_building_changeable_construction_speed = CM_temp_state_targeted_building_construction_speed }
 }
-
-CM_calculate_average_num_of_days_for_naval_dockyards_construction_with_full_line = {
+CM_calculate_current_infrastructure_average_num_of_days_for_naval_dockyards_construction = {
 	set_variable = { CM_average_num_of_days_for_targeted_building_construction = 426.667 } # 6400 / 15
 	divide_variable = { CM_average_num_of_days_for_targeted_building_construction = CM_temp_state_targeted_building_construction_speed }
 }
+
 CM_calculate_average_num_of_days_for_naval_dockyards_constructions = {
 	CM_calculate_variables_for_targeted_buildings_and_infrastructure_construction_iterations = yes
 	
@@ -3946,28 +3917,29 @@ CM_calculate_average_num_of_days_for_naval_dockyards_constructions = {
 }
 
 CM_define_basic_naval_dockyards_and_infrastructure_construction_objects_for_full_line = {
-	CM_calculate_variables_for_multiple_naval_dockyards_and_infrastructure_constructions = yes
+	CM_calculate_variables_for_naval_dockyards_and_infrastructure_constructions = yes
 	CM_calculate_num_of_days_for_infrastructure_construction_with_full_line = yes
-	CM_calculate_average_num_of_days_for_naval_dockyards_construction_with_full_line = yes
+	CM_calculate_current_infrastructure_average_num_of_days_for_naval_dockyards_construction = yes
 	
-	set_temp_variable = { CM_temp_non_infrastructure_average_num_of_days_for_targeted_building_construction = CM_average_num_of_days_for_targeted_building_construction }
+	set_temp_variable = { CM_temp_current_infrastructure_average_num_of_days_for_targeted_building_construction = CM_average_num_of_days_for_targeted_building_construction }
 }
 CM_define_basic_naval_dockyards_and_infrastructure_construction_objects = {
-	CM_calculate_variables_for_multiple_naval_dockyards_and_infrastructure_constructions = yes
+	CM_calculate_variables_for_naval_dockyards_and_infrastructure_constructions = yes
 	CM_calculate_num_of_days_for_infrastructure_construction = yes
 	CM_calculate_average_num_of_days_for_naval_dockyards_constructions = yes
 	
-	set_temp_variable = { CM_temp_non_infrastructure_average_num_of_days_for_targeted_building_construction = CM_average_num_of_days_for_targeted_building_construction }
+	set_temp_variable = { CM_temp_current_infrastructure_average_num_of_days_for_targeted_building_construction = CM_average_num_of_days_for_targeted_building_construction }
 }
 
 CM_calculate_max_infrastructure_state_naval_dockyards_construction_speed = {
 	set_temp_variable = { CM_temp_state_targeted_building_construction_speed = 2 }
 	add_to_temp_variable = { CM_temp_state_targeted_building_construction_speed = ROOT.modifier@production_speed_dockyard_factor }
+	
 	CM_add_state_naval_dockyards_construction_speed = yes
 }
 CM_calculate_max_infrastructure_state_average_num_of_days_for_naval_dockyards_construction_with_full_line = {
 	CM_calculate_max_infrastructure_state_naval_dockyards_construction_speed = yes
-	CM_calculate_average_num_of_days_for_naval_dockyards_construction_with_full_line = yes
+	CM_calculate_current_infrastructure_average_num_of_days_for_naval_dockyards_construction = yes
 }
 CM_calculate_max_infrastructure_state_average_num_of_days_for_naval_dockyards_construction = {
 	CM_calculate_max_infrastructure_state_naval_dockyards_construction_speed = yes
@@ -3996,7 +3968,7 @@ CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_for_f
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_naval_dockyards_construction_with_full_line = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
+	print_variables = {
 		file = CM_log_file
 		text = CM_state_naval_dockyards_calculation_variables
 		append = yes
@@ -4026,11 +3998,11 @@ CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_for_f
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_naval_dockyards_construction = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_naval_dockyards_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_naval_dockyards_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -4057,11 +4029,11 @@ CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_for_o
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_naval_dockyards_construction_with_full_line = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_naval_dockyards_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_naval_dockyards_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -4087,11 +4059,11 @@ CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_for_o
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_naval_dockyards_construction = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_naval_dockyards_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_naval_dockyards_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -4118,11 +4090,11 @@ CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_for_m
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_naval_dockyards_construction_with_full_line = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_naval_dockyards_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_naval_dockyards_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -4148,11 +4120,11 @@ CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_for_m
 		CM_calculate_max_infrastructure_state_average_num_of_days_for_naval_dockyards_construction = yes
 	}
 	
-	print_variables = { # вызывает пролаг за большую страну
-		file = CM_log_file
-		text = CM_state_naval_dockyards_calculation_variables
-		append = yes
-	}
+	#print_variables = {
+	#	file = CM_log_file
+	#	text = CM_state_naval_dockyards_calculation_variables
+	#	append = yes
+	#}
 	
 	add_to_array = { ROOT.CM_possible_construction_targets = THIS }
 }
@@ -4298,14 +4270,14 @@ CM_create_owned_controlled_states_array_for_naval_dockyards_with_infrastructure_
 			for_each_scope_loop = {
 				array = owned_controlled_states
 				
-				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_full_line_if_has_free_building_slots = yes
+				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_if_has_free_building_slots = yes
 			}
 		}
 		else = {
 			for_each_scope_loop = {
 				array = owned_controlled_states
 				
-				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_if_has_free_building_slots = yes
+				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_full_line_if_has_free_building_slots = yes
 			}
 		}
 	}
@@ -4318,14 +4290,14 @@ CM_create_owned_controlled_states_array_for_naval_dockyards_with_infrastructure_
 			for_each_scope_loop = {
 				array = owned_controlled_states
 				
-				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_full_line_if_has_free_building_slots = yes
+				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_if_has_free_building_slots = yes
 			}
 		}
 		else = {
 			for_each_scope_loop = {
 				array = owned_controlled_states
 				
-				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_if_has_free_building_slots = yes
+				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_full_line_if_has_free_building_slots = yes
 			}
 		}
 	}
@@ -4338,14 +4310,14 @@ CM_create_owned_controlled_states_array_for_naval_dockyards_with_infrastructure_
 			for_each_scope_loop = {
 				array = owned_controlled_states
 				
-				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_full_line_if_has_free_building_slots = yes
+				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_if_has_free_building_slots = yes
 			}
 		}
 		else = {
 			for_each_scope_loop = {
 				array = owned_controlled_states
 				
-				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_if_has_free_building_slots = yes
+				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_full_line_if_has_free_building_slots = yes
 			}
 		}
 	}
@@ -4360,14 +4332,14 @@ CM_create_controlled_states_array_for_naval_dockyards_and_infrastructure_constru
 			for_each_scope_loop = {
 				array = controlled_states
 				
-				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_full_line_if_has_free_building_slots = yes
+				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_if_has_free_building_slots = yes
 			}
 		}
 		else = {
 			for_each_scope_loop = {
 				array = controlled_states
 				
-				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_if_has_free_building_slots = yes
+				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_full_line_if_has_free_building_slots = yes
 			}
 		}
 	}
@@ -4380,14 +4352,14 @@ CM_create_controlled_states_array_for_naval_dockyards_and_infrastructure_constru
 			for_each_scope_loop = {
 				array = controlled_states
 				
-				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_full_line_if_has_free_building_slots = yes
+				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_if_has_free_building_slots = yes
 			}
 		}
 		else = {
 			for_each_scope_loop = {
 				array = controlled_states
 				
-				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_if_has_free_building_slots = yes
+				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_full_line_if_has_free_building_slots = yes
 			}
 		}
 	}
@@ -4400,14 +4372,14 @@ CM_create_controlled_states_array_for_naval_dockyards_and_infrastructure_constru
 			for_each_scope_loop = {
 				array = controlled_states
 				
-				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_full_line_if_has_free_building_slots = yes
+				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_if_has_free_building_slots = yes
 			}
 		}
 		else = {
 			for_each_scope_loop = {
 				array = controlled_states
 				
-				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_if_has_free_building_slots = yes
+				CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_full_line_if_has_free_building_slots = yes
 			}
 		}
 	}
@@ -4435,7 +4407,7 @@ CM_create_possible_naval_dockyards_and_infrastructure_targets_array = {
 					
 					if = {
 						limit = { CM_is_owned_and_controlled_with_free_building_slot_for_naval_dockyard = yes }
-						CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_full_line = yes
+						CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI = yes
 					}
 				}
 			}
@@ -4445,7 +4417,7 @@ CM_create_possible_naval_dockyards_and_infrastructure_targets_array = {
 					
 					if = {
 						limit = { CM_is_owned_and_controlled_with_free_building_slot_for_naval_dockyard = yes }
-						CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI = yes
+						CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_fastest_ROI_full_line = yes
 					}
 				}
 			}
@@ -4461,7 +4433,7 @@ CM_create_possible_naval_dockyards_and_infrastructure_targets_array = {
 					
 					if = {
 						limit = { CM_is_owned_and_controlled_with_free_building_slot_for_naval_dockyard = yes }
-						CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_full_line = yes
+						CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI = yes
 					}
 				}
 			}
@@ -4471,7 +4443,7 @@ CM_create_possible_naval_dockyards_and_infrastructure_targets_array = {
 					
 					if = {
 						limit = { CM_is_owned_and_controlled_with_free_building_slot_for_naval_dockyard = yes }
-						CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI = yes
+						CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_optimal_ROI_full_line = yes
 					}
 				}
 			}
@@ -4487,7 +4459,7 @@ CM_create_possible_naval_dockyards_and_infrastructure_targets_array = {
 					
 					if = {
 						limit = { CM_is_owned_and_controlled_with_free_building_slot_for_naval_dockyard = yes }
-						CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_full_line = yes
+						CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI = yes
 					}
 				}
 			}
@@ -4497,7 +4469,7 @@ CM_create_possible_naval_dockyards_and_infrastructure_targets_array = {
 					
 					if = {
 						limit = { CM_is_owned_and_controlled_with_free_building_slot_for_naval_dockyard = yes }
-						CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI = yes
+						CM_calculate_state_naval_dockyards_and_infrastructure_construction_objects_with_num_of_free_IC_slots_for_maximum_ROI_full_line = yes
 					}
 				}
 			}
@@ -4512,7 +4484,7 @@ CM_create_possible_naval_dockyards_and_infrastructure_targets_array = {
 	}
 }
 
-CM_add_multiple_naval_dockyards_and_infrastructure_constructions = {
+CM_add_naval_dockyards_and_infrastructure_constructions = {
 	CM_create_possible_naval_dockyards_and_infrastructure_targets_array = yes
 	
 	print_variables = {

@@ -9,7 +9,9 @@ scripted_gui = {
 		}
 		
 		triggers = {
-			CM_infrastructure_construction_focus_icon_visible = { check_variable = { CM_construction_focus_ID = -1 } }
+			CM_infrastructure_construction_focus_icon_visible = {
+				check_variable = { CM_construction_focus_ID = -1 }
+			}
 			
 			CM_industrial_complexes_construction_focus_icon_visible = {
 				OR = {
@@ -17,9 +19,18 @@ scripted_gui = {
 					check_variable = { CM_construction_focus_ID = 10 }
 				}
 			}
-			
-			CM_arms_factories_construction_focus_icon_visible = { check_variable = { CM_construction_focus_ID = 2 } }
-			CM_naval_dockyards_construction_focus_icon_visible = { check_variable = { CM_construction_focus_ID = 3 } }
+			CM_arms_factories_construction_focus_icon_visible = {
+				OR = {
+					check_variable = { CM_construction_focus_ID = 2 }
+					check_variable = { CM_construction_focus_ID = 20 }
+				}
+			}
+			CM_naval_dockyards_construction_focus_icon_visible = {
+				OR = {
+					check_variable = { CM_construction_focus_ID = 3 }
+					check_variable = { CM_construction_focus_ID = 30 }
+				}
+			}
 			
 			CM_priority_filter_icon_visible = { has_country_flag = CM_priority_filter_on_flag }
 			
@@ -55,46 +66,49 @@ scripted_gui = {
 							limit = { check_variable = { CM_infrastructure_construction_targets^num > 0 } }
 							
 							CM_check_infrastructure_construction_targets_for_ongoing_construction = yes
-						}
-					}
-					
-					CM_create_possible_infrastructure_targets_array = yes
-					
-					while_loop_effect = {
-						limit = { always = yes } # do_while
-						
-						CM_add_infrastructure_construction = yes
-						
-						if = {
-							limit = {
-								OR = {
-									check_variable = { CM_temp_num_of_available_civilian_factories_for_check > num_of_available_civilian_factories }
-									CM_no_possible_construction_sites_for_infrastructure = yes
-								}
+							
+							if = {
+								limit = { num_of_available_civilian_factories > 0 }
+								
+								CM_add_infrastructure_construction = yes
 							}
-							
-							set_temp_variable = { break = 1 }
 						}
-						else_if = {
-							limit = { CM_possible_new_target_array_for_infrastructure = yes }
-							
-							CM_recreate_infrastructure_targets_array = yes
+						else = {
+							CM_add_infrastructure_construction = yes
 						}
 					}
-					
-					print_variables = {
-						file = CM_log_file
-						text = CM_country_industrial_complexes_calculation_variables
-						append = yes
+					else = {
+						CM_add_infrastructure_construction = yes
 					}
-					
-					CM_remove_infrastructure_construction_objects = yes
 				}
 			}
 			CM_build_infrastructure_button_shift_click = {
 				if = {
 					limit = { CM_can_possible_build_infrastructure = yes }
-					CM_add_multiple_infrastructure_constructions = yes
+					
+					if = {
+						limit = { check_variable = { CM_infrastructure_construction_targets^num > 0 } }
+						
+						CM_check_infrastructure_construction_targets_for_targeted_infrastructure_level = yes
+						
+						if = {
+							limit = { check_variable = { CM_infrastructure_construction_targets^num > 0 } }
+							
+							CM_check_infrastructure_construction_targets_for_ongoing_construction_with_temp_variable_for_check = yes
+							
+							if = {
+								limit = { num_of_available_civilian_factories > 0 }
+								
+								CM_add_infrastructure_constructions = yes
+							}
+						}
+						else = {
+							CM_add_infrastructure_constructions = yes
+						}
+					}
+					else = {
+						CM_add_infrastructure_constructions = yes
+					}
 				}
 			}
 			CM_build_infrastructure_button_right_click = {
@@ -107,15 +121,28 @@ scripted_gui = {
 						}
 					}
 					
-					CM_update_infrastructure_construction_targets_array_on_set_construction_focus = yes
-					
 					if = {
 						limit = { CM_can_possible_increase_resources = yes }
 						
 						if = {
+							limit = { check_variable = { CM_infrastructure_construction_targets^num > 0 } }
+							
+							CM_check_infrastructure_construction_targets_for_targeted_infrastructure_level = yes
+							
+							if = {
+								limit = {
+									check_variable = { CM_infrastructure_construction_targets^num > 0 }
+									num_of_available_civilian_factories > 0
+								}
+								
+								CM_check_infrastructure_construction_targets_for_ongoing_construction_with_temp_variable_for_check = yes
+							}
+						}
+						
+						if = {
 							limit = { num_of_available_civilian_factories > 0 }
 							
-							CM_add_multiple_infrastructure_constructions = yes
+							CM_add_infrastructure_constructions = yes
 						}
 						
 						set_variable = { CM_construction_focus_ID = -1 }
@@ -159,7 +186,7 @@ scripted_gui = {
 			CM_build_industrial_complexes_button_shift_click = {
 				if = {
 					limit = { CM_can_possible_build_industrial_complex = yes }
-					CM_add_multiple_industrial_complexes_constructions = yes
+					CM_add_industrial_complexes_constructions = yes
 				}
 			}
 			CM_build_industrial_complexes_button_control_shift_click = {
@@ -198,7 +225,7 @@ scripted_gui = {
 						if = {
 							limit = { num_of_available_civilian_factories > 0 }
 							
-							CM_add_multiple_industrial_complexes_constructions = yes
+							CM_add_industrial_complexes_constructions = yes
 						}
 						
 						set_variable = { CM_construction_focus_ID = 1 }
@@ -218,7 +245,7 @@ scripted_gui = {
 						}
 					}
 					
-					CM_update_infrastructure_construction_targets_array_on_set_construction_focus = yes
+					CM_update_infrastructure_construction_targets_array = yes
 					
 					if = {
 						limit = {
@@ -231,7 +258,7 @@ scripted_gui = {
 						if = {
 							limit = { num_of_available_civilian_factories > 0 }
 							
-							CM_add_multiple_industrial_complexes_and_infrastructure_constructions = yes
+							CM_add_industrial_complexes_and_infrastructure_constructions = yes
 						}
 						
 						set_variable = { CM_construction_focus_ID = 10 }
@@ -275,7 +302,7 @@ scripted_gui = {
 			CM_build_arms_factories_button_shift_click = {
 				if = {
 					limit = { CM_can_possible_build_arms_factory = yes }
-					CM_add_multiple_arms_factories_constructions = yes
+					CM_add_arms_factories_constructions = yes
 				}
 			}
 			CM_build_arms_factories_button_control_shift_click = {
@@ -309,7 +336,7 @@ scripted_gui = {
 						if = {
 							limit = { num_of_available_civilian_factories > 0 }
 							
-							CM_add_multiple_arms_factories_constructions = yes
+							CM_add_arms_factories_constructions = yes
 						}
 						
 						set_variable = { CM_construction_focus_ID = 2 }
@@ -329,7 +356,7 @@ scripted_gui = {
 						}
 					}
 					
-					CM_update_infrastructure_construction_targets_array_on_set_construction_focus = yes
+					CM_update_infrastructure_construction_targets_array = yes
 					
 					if = {
 						limit = {
@@ -342,7 +369,7 @@ scripted_gui = {
 						if = {
 							limit = { num_of_available_civilian_factories > 0 }
 							
-							CM_add_multiple_arms_factories_and_infrastructure_constructions = yes
+							CM_add_arms_factories_and_infrastructure_constructions = yes
 						}
 						
 						set_variable = { CM_construction_focus_ID = 20 }
@@ -386,7 +413,7 @@ scripted_gui = {
 			CM_build_naval_dockyards_button_shift_click = {
 				if = {
 					limit = { CM_can_possible_build_naval_dockyard = yes }
-					CM_add_multiple_naval_dockyards_constructions = yes
+					CM_add_naval_dockyards_constructions = yes
 				}
 			}
 			CM_build_naval_dockyards_button_control_shift_click = {
@@ -420,7 +447,7 @@ scripted_gui = {
 						if = {
 							limit = { num_of_available_civilian_factories > 0 }
 							
-							CM_add_multiple_naval_dockyards_constructions = yes
+							CM_add_naval_dockyards_constructions = yes
 						}
 						
 						set_variable = { CM_construction_focus_ID = 3 }
@@ -440,7 +467,7 @@ scripted_gui = {
 						}
 					}
 					
-					CM_update_infrastructure_construction_targets_array_on_set_construction_focus = yes
+					CM_update_infrastructure_construction_targets_array = yes
 					
 					if = {
 						limit = {
@@ -453,7 +480,7 @@ scripted_gui = {
 						if = {
 							limit = { num_of_available_civilian_factories > 0 }
 							
-							CM_add_multiple_naval_dockyards_and_infrastructure_constructions = yes
+							CM_add_naval_dockyards_and_infrastructure_constructions = yes
 						}
 						
 						set_variable = { CM_construction_focus_ID = 30 }

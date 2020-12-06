@@ -54,9 +54,19 @@ CM_is_highest_priority_state_for_targeted_building_construction = {
 			limit = { check_variable = { CM_state_targeted_building_construction_speed = PREV.CM_state_targeted_building_construction_speed } }
 			
 			check_variable = {
-				var = state_and_terrain_strategic_value
+				var = CM_targeted_infrastructure_level
 				compare = less_than_or_equals
-				value = PREV.state_and_terrain_strategic_value
+				value = PREV.CM_targeted_infrastructure_level
+			}
+			
+			if = {
+				limit = { check_variable = { CM_targeted_infrastructure_level = PREV.CM_targeted_infrastructure_level } }
+				
+				check_variable = {
+					var = state_and_terrain_strategic_value
+					compare = less_than_or_equals
+					value = PREV.state_and_terrain_strategic_value
+				}
 			}
 		}
 	}
