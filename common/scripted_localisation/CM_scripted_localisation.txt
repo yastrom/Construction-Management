@@ -1,0 +1,677 @@
+### Country Construction Management ###
+
+defined_text = {
+	name = GetCMAutomaticInfrastructureConstructionDescription
+	
+	text = {
+		trigger = { check_variable = { CM_construction_focus_ID = -1 } }
+		
+		localization_key = CM_infrastructure_remove_construction_focus_delayed_tooltip
+	}
+	text = {
+		localization_key = CM_infrastructure_auto_construction_delayed_tooltip
+	}
+}
+defined_text = {
+	name = GetCMBuildInfrastructureConditions
+	
+	text = {
+		trigger = {
+			OR = {
+				AND = { # быстрая проверка на возможность
+					check_variable = { resource_produced@steel = 0 }
+					check_variable = { resource_produced@crystals = 0 }
+					check_variable = { resource_produced@tungsten = 0 }
+					check_variable = { resource_produced@aluminium = 0 }
+					check_variable = { resource_produced@chromium = 0 }
+					check_variable = { resource_produced@oil = 0 }
+					check_variable = { resource_produced@rubber = 0 }
+				}
+				
+				CM_any_defined_scopes_have_possible_free_infrastructure_slots = no
+			}
+		}
+		
+		localization_key = CM_can_not_construct_state_building_tooltip
+	}
+	text = {
+		trigger = { num_of_available_civilian_factories > 0 }
+		
+		localization_key = CM_construct_mining_infrastructure_delayed_tooltip
+	}
+	text = {
+		trigger = { check_variable = { CM_construction_focus_ID = -1 } }
+		
+		localization_key = CM_infrastructure_remove_construction_focus_delayed_tooltip
+	}
+	text = {
+		localization_key = CM_infrastructure_set_construction_focus_delayed_tooltip
+	}
+}
+defined_text = {
+	name = GetCMInfrastructureAttention
+	
+	text = {
+		trigger = {
+			check_variable = {
+				var = CM_construction_focus_ID?-1
+				compare = not_equals
+				value = -1
+			}
+		}
+		
+		localization_key = CM_attention_changing_focus_tooltip
+	}
+	text = {
+		localization_key = ""
+	}
+}
+
+defined_text = {
+	name = GetCMAutomaticIndustrialComplexesConstructionDescription
+	
+	text = {
+		trigger = { check_variable = { CM_construction_focus_ID = 10 } }
+		localization_key = CM_industrial_complexes_and_infrastructure_remove_construction_focus_delayed_tooltip
+	}
+	text = {
+		trigger = { check_variable = { CM_construction_focus_ID = 1 } }
+		localization_key = CM_industrial_complexes_remove_construction_focus_delayed_tooltip
+	}
+	text = {
+		localization_key = CM_industrial_complexes_auto_construction_delayed_tooltip
+	}
+}
+defined_text = {
+	name = GetCMBuildIndustrialComplexesConditions
+	
+	text = {
+		trigger = {
+			all_of_scopes = {
+				array = controlled_states
+				
+				free_building_slots = {
+					building = industrial_complex
+					size < 1
+					include_locked = no
+				}
+			}
+		}
+		
+		localization_key = CM_can_not_construct_shared_building_tooltip
+	}
+	text = {
+		trigger = { num_of_available_civilian_factories > 0 }
+		
+		localization_key = CM_construct_industrial_complexes_delayed_tooltip
+	}
+	text = {
+		trigger = { check_variable = { CM_construction_focus_ID = 10 } }
+		localization_key = CM_industrial_complexes_and_infrastructure_remove_construction_focus_delayed_tooltip
+	}
+	text = {
+		trigger = { check_variable = { CM_construction_focus_ID = 1 } }
+		localization_key = CM_industrial_complexes_remove_construction_focus_delayed_tooltip
+	}
+	text = {
+		localization_key = CM_industrial_complexes_set_construction_focus_delayed_tooltip
+	}
+}
+defined_text = {
+	name = GetCMIndustrialComplexesAttention
+	
+	text = {
+		trigger = {
+			check_variable = {
+				var = CM_construction_focus_ID?1
+				compare = not_equals
+				value = 1
+			}
+			check_variable = {
+				var = CM_construction_focus_ID?10
+				compare = not_equals
+				value = 10
+			}
+		}
+		
+		localization_key = CM_attention_changing_focus_tooltip
+	}
+	text = {
+		localization_key = ""
+	}
+}
+
+defined_text = {
+	name = GetCMAutomaticArmsFactoriesConstructionDescription
+	
+	text = {
+		trigger = { check_variable = { CM_construction_focus_ID = 20 } }
+		localization_key = CM_arms_factories_and_infrastructure_remove_construction_focus_delayed_tooltip
+	}
+	text = {
+		trigger = { check_variable = { CM_construction_focus_ID = 2 } }
+		localization_key = CM_arms_factories_remove_construction_focus_delayed_tooltip
+	}
+	text = {
+		localization_key = CM_arms_factories_auto_construction_delayed_tooltip
+	}
+}
+defined_text = {
+	name = GetCMBuildArmsFactoriesConditions
+	
+	text = {
+		trigger = {
+			all_of_scopes = {
+				array = controlled_states
+				
+				free_building_slots = {
+					building = arms_factory
+					size < 1
+					include_locked = no
+				}
+			}
+		}
+		
+		localization_key = CM_can_not_construct_shared_building_tooltip
+	}
+	text = {
+		trigger = { num_of_available_civilian_factories > 0 }
+		
+		localization_key = CM_construct_arms_factories_delayed_tooltip
+	}
+	text = {
+		trigger = { check_variable = { CM_construction_focus_ID = 20 } }
+		localization_key = CM_arms_factories_and_infrastructure_remove_construction_focus_delayed_tooltip
+	}
+	text = {
+		trigger = { check_variable = { CM_construction_focus_ID = 2 } }
+		localization_key = CM_arms_factories_remove_construction_focus_delayed_tooltip
+	}
+	text = {
+		localization_key = CM_arms_factories_set_construction_focus_delayed_tooltip
+	}
+}
+defined_text = {
+	name = GetCMArmsFactoriesAttention
+	
+	text = {
+		trigger = {
+			check_variable = {
+				var = CM_construction_focus_ID?2
+				compare = not_equals
+				value = 2
+			}
+			check_variable = {
+				var = CM_construction_focus_ID?20
+				compare = not_equals
+				value = 20
+			}
+		}
+		
+		localization_key = CM_attention_changing_focus_tooltip
+	}
+	text = {
+		localization_key = ""
+	}
+}
+
+defined_text = {
+	name = GetCMAutomaticNavalDockyardsConstructionDescription
+	
+	text = {
+		trigger = { check_variable = { CM_construction_focus_ID = 30 } }
+		localization_key = CM_naval_dockyards_and_infrastructure_remove_construction_focus_delayed_tooltip
+	}
+	text = {
+		trigger = { check_variable = { CM_construction_focus_ID = 3 } }
+		localization_key = CM_naval_dockyards_remove_construction_focus_delayed_tooltip
+	}
+	text = {
+		localization_key = CM_naval_dockyards_auto_construction_delayed_tooltip
+	}
+}
+defined_text = {
+	name = GetCMBuildNavalDockyardsConditions
+	
+	text = {
+		trigger = {
+			all_of_scopes = {
+				array = controlled_states
+				
+				free_building_slots = {
+					building = dockyard
+					size < 1
+					include_locked = no
+				}
+			}
+		}
+		
+		localization_key = CM_can_not_construct_naval_dockyards_tooltip
+	}
+	text = {
+		trigger = { num_of_available_civilian_factories > 0 }
+		
+		localization_key = CM_construct_naval_dockyards_delayed_tooltip
+	}
+	text = {
+		trigger = { check_variable = { CM_construction_focus_ID = 30 } }
+		localization_key = CM_naval_dockyards_and_infrastructure_remove_construction_focus_delayed_tooltip
+	}
+	text = {
+		trigger = { check_variable = { CM_construction_focus_ID = 3 } }
+		localization_key = CM_naval_dockyards_remove_construction_focus_delayed_tooltip
+	}
+	text = {
+		localization_key = CM_naval_dockyards_set_construction_focus_delayed_tooltip
+	}
+}
+defined_text = {
+	name = GetCMNavalDockyardsAttention
+	
+	text = {
+		trigger = {
+			check_variable = {
+				var = CM_construction_focus_ID?3
+				compare = not_equals
+				value = 3
+			}
+			check_variable = {
+				var = CM_construction_focus_ID?30
+				compare = not_equals
+				value = 30
+			}
+		}
+		
+		localization_key = CM_attention_changing_focus_tooltip
+	}
+	text = {
+		localization_key = ""
+	}
+}
+
+defined_text = {
+	name = GetCMROIButtonText
+	
+	text = {
+		trigger = { check_variable = { CM_ROI_coefficient?1 = 1 } }
+		localization_key = CM_ROI_fastest_factor_tooltip
+	}
+	text = {
+		trigger = { check_variable = { CM_ROI_coefficient = 2 } }
+		localization_key = CM_ROI_optimal_factor_tooltip
+	}
+	text = { # CM_ROI_coefficient = 3
+		localization_key = CM_ROI_maximum_factor_tooltip
+	}
+}
+defined_text = {
+	name = GetCMROITooltip
+	
+	text = {
+		trigger = {
+			set_temp_variable = { CM_temp_min_num_of_infrastructure_for_construction = modifier@global_building_slots_factor }
+			multiply_temp_variable = { CM_temp_min_num_of_infrastructure_for_construction = 8.333 }
+			round_temp_variable = CM_temp_min_num_of_infrastructure_for_construction
+		}
+		
+		localization_key = CM_ROI_tooltip
+	}
+}
+
+defined_text = {
+	name = GetCMTargetsFilterScopes
+	
+	text = {
+		trigger = { check_variable = { CM_states_filter_regime?1 = 1 } }
+		localization_key = CM_cored_owned_states_tooltip
+	}
+	text = {
+		trigger = { check_variable = { CM_states_filter_regime = 3 } }
+		localization_key = CM_owned_states_tooltip
+	}
+	text = {
+		localization_key = CM_states_tooltip
+	}
+}
+defined_text = {
+	name = GetCMPriorityFilterDelayedTooltip
+	
+	text = {
+		trigger = {
+			check_variable = {
+				var = CM_states_filter_regime
+				compare = not_equals
+				value = 2
+			}
+		}
+		
+		localization_key = CM_pre_get_priority_filter_delayed_tooltip
+	}
+}
+defined_text = {
+	name = GetCMPriorityFilterCondition
+	
+	text = {
+		trigger = { has_country_flag = CM_priority_states_filter_on_flag }
+		localization_key = CM_remove_targets_filter_priority_delayed_tooltip
+	}
+	text = {
+		localization_key = CM_add_targets_filter_priority_delayed_tooltip
+	}
+}
+
+### Construction Management Panel ###
+
+defined_text = {
+	name = GetCMStateBuildingsConstructionSpeedColor
+	
+	text = {
+		trigger = {
+			if = {
+				limit = { industrial_complex < 20 }
+				
+				free_building_slots = {
+					building = industrial_complex
+					size < 1
+					include_locked = no
+				}
+			}
+			else = {
+				free_building_slots = {
+					building = arms_factory
+					size < 1
+					include_locked = no
+				}
+			}
+		}
+		
+		localization_key = CM_light_grey_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 1 } } }
+		localization_key = CM_blue_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.8 } } }
+		localization_key = CM_cyan_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.6 } } }
+		localization_key = CM_green_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.4 } } }
+		localization_key = CM_yellow_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.2 } } }
+		localization_key = CM_orange_color_loc_key
+	}
+	text = {
+		localization_key = CM_red_color_loc_key
+	}
+}
+defined_text = {
+	name = GetCMStateIndustrialComplexesConstructionSpeedColor
+	
+	text = {
+		trigger = {
+			free_building_slots = {
+				building = industrial_complex
+				size < 1
+				include_locked = no
+			}
+		}
+		
+		localization_key = CM_light_grey_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 1 } } }
+		localization_key = CM_blue_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.8 } } }
+		localization_key = CM_cyan_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.6 } } }
+		localization_key = CM_green_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.4 } } }
+		localization_key = CM_yellow_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.2 } } }
+		localization_key = CM_orange_color_loc_key
+	}
+	text = {
+		localization_key = CM_red_color_loc_key
+	}
+}
+defined_text = {
+	name = GetCMStateArmsFactoriesConstructionSpeedColor
+	
+	text = {
+		trigger = {
+			free_building_slots = {
+				building = arms_factory
+				size < 1
+				include_locked = no
+			}
+		}
+		
+		localization_key = CM_light_grey_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 1 } } }
+		localization_key = CM_blue_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.8 } } }
+		localization_key = CM_cyan_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.6 } } }
+		localization_key = CM_green_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.4 } } }
+		localization_key = CM_yellow_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.2 } } }
+		localization_key = CM_orange_color_loc_key
+	}
+	text = {
+		localization_key = CM_red_color_loc_key
+	}
+}
+
+defined_text = {
+	name = GetCMInfoWindowDockyardsConstructionSpeed
+	
+	text = {
+		trigger = { is_coastal = yes }
+		
+		localization_key = "[GetCMStateNavalDockyardsConstructionSpeedColor][?CM_state_naval_dockyard_construction_speed|=%]"
+	}
+	text = {
+		localization_key = CM_not_coastal_loc_key
+	}
+}
+
+defined_text = {
+	name = GetCMStateNavalDockyardsConstructionSpeedColor
+	
+	text = {
+		trigger = {
+			free_building_slots = {
+				building = dockyard
+				size < 1
+				include_locked = no
+			}
+		}
+		
+		localization_key = CM_light_grey_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 1 } } }
+		localization_key = CM_blue_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.8 } } }
+		localization_key = CM_cyan_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.6 } } }
+		localization_key = CM_green_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.4 } } }
+		localization_key = CM_yellow_color_loc_key
+	}
+	text = {
+		trigger = { NOT = { check_variable = { CM_state_buildings_construction_speed < 0.2 } } }
+		localization_key = CM_orange_color_loc_key
+	}
+	text = {
+		localization_key = CM_red_color_loc_key
+	}
+}
+
+defined_text = {
+	name = GetCMPanelFilterScopes
+	
+	text = {
+		trigger = { check_variable = { CM_states_ownership_filter_frame = 1 } }
+		localization_key = CM_cored_owned_states_tooltip
+	}
+	text = {
+		trigger = { check_variable = { CM_states_ownership_filter_frame = 3 } }
+		localization_key = CM_owned_states_tooltip
+	}
+	text = {
+		localization_key = CM_states_tooltip
+	}
+}
+
+defined_text = {
+	name = GetCMFormatedStateOilCoefficient
+	
+	text = {
+		trigger = { check_variable = { CM_state_resources_coefficients^6 > 0 } }
+		localization_key = CM_formated_state_oil_coefficient_text
+	}
+	text = {
+		localization_key = CM_no_state_resource_loc_key
+	}
+}
+defined_text = {
+	name = GetCMFormatedStateAluminumCoefficient
+	
+	text = {
+		trigger = { check_variable = { CM_state_resources_coefficients^3 > 0 } }
+		localization_key = CM_formated_state_aluminum_coefficient_text
+	}
+	text = {
+		localization_key = CM_no_state_resource_loc_key
+	}
+}
+defined_text = {
+	name = GetCMFormatedStateRubberCoefficient
+	
+	text = {
+		trigger = { check_variable = { CM_state_resources_coefficients^4 > 0 } }
+		localization_key = CM_formated_state_rubber_coefficient_text
+	}
+	text = {
+		localization_key = CM_no_state_resource_loc_key
+	}
+}
+defined_text = {
+	name = GetCMFormatedStateTungstenCoefficient
+	
+	text = {
+		trigger = { check_variable = { CM_state_resources_coefficients^2 > 0 } }
+		localization_key = CM_formated_state_tungsten_coefficient_text
+	}
+	text = {
+		localization_key = CM_no_state_resource_loc_key
+	}
+}
+defined_text = {
+	name = GetCMFormatedStateSteelCoefficient
+	
+	text = {
+		trigger = { check_variable = { CM_state_resources_coefficients^0 > 0 } }
+		localization_key = CM_formated_state_steel_coefficient_text
+	}
+	text = {
+		localization_key = CM_no_state_resource_loc_key
+	}
+}
+defined_text = {
+	name = GetCMFormatedStateChromiumCoefficient
+	
+	text = {
+		trigger = { check_variable = { CM_state_resources_coefficients^5 > 0 } }
+		localization_key = CM_formated_state_chromium_coefficient_text
+	}
+	text = {
+		localization_key = CM_no_state_resource_loc_key
+	}
+}
+defined_text = {
+	name = GetCMFormatedStateCrystalsCoefficient
+	
+	text = {
+		trigger = { check_variable = { CM_state_resources_coefficients^1 > 0 } }
+		localization_key = CM_formated_state_crystals_coefficient_text
+	}
+	text = {
+		localization_key = CM_no_state_resource_loc_key
+	}
+}
+
+defined_text = {
+	name = GetCMFullyBuiltCondition
+	
+	text = {
+		trigger = { check_variable = { CM_free_slots_filter_frame = 1 } }
+		localization_key = CM_show_fully_built_loc_key
+	}
+	text = {
+		localization_key = CM_hide_fully_built_loc_key
+	}
+}
+defined_text = {
+	name = GetCMShowOnlyBlockedStatesCondition
+	
+	text = {
+		trigger = { NOT = { has_country_flag = CM_show_blocked_for_QCF_flag } }
+		localization_key = CM_show_only_blocked_states_loc_key
+	}
+}
+defined_text = {
+	name = GetCMUnblockStateForQCFCondition
+	
+	text = {
+		trigger = { has_state_flag = CM_blocked_for_QCF_flag }
+		localization_key = CM_allow_state_for_QCF_loc_key
+	}
+}
+
+defined_text = {
+	name = GetCMCivToMilCoefficient
+	
+	text = {
+		trigger = {
+			set_temp_variable = { CM_temp_civ_to_mil_coefficient = num_of_civilian_factories }
+			add_to_temp_variable = { CM_temp_civ_to_mil_coefficient = num_of_military_factories }
+			divide_temp_variable = { CM_temp_civ_to_mil_coefficient = num_of_military_factories }
+		}
+		
+		localization_key = CM_panel_civ_to_mil_coefficient_var_key
+	}
+}

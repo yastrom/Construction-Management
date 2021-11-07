@@ -28,18 +28,41 @@ country_event = {
 	}
 }
 
-country_event = {
+country_event = { # Debug
 	id = CM_events.2
 	immediate = { log = "[GetDateText]: [Root.GetName]: event CM_events.2" }
 	hidden = yes
 	
 	is_triggered_only = yes
-	fire_only_once = no
 	
 	option = {
 		add_offsite_building = {
 			type = industrial_complex
 			level = 30
+		}
+	}
+}
+
+country_event = { # Debug
+	id = CM_events.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CM_events.3" }
+	
+	is_triggered_only = yes
+	
+	option = {
+		meta_effect = {
+			text = {
+				[IMPORTER] = {
+					create_import = {
+						resource = steel
+						amount = -20
+						exporter = [EXPORTER]
+					}
+				}
+			}
+			IMPORTER = "[GRI.GetTag]"
+			EXPORTER = "[ROOT.GetTag]"
+			#debug = yes #set to yes if you want to see what game actually executes
 		}
 	}
 }

@@ -1,0 +1,34 @@
+spriteTypes = {
+	spriteType = {
+		name = "GFX_CM_panel_background"
+		texturefile = "gfx//interface//CM_panel_background.dds"
+	}
+	
+	spriteType = {
+		name = "GFX_CM_panel_checkbox_20_20"
+		texturefile = "gfx//interface//CM_panel_checkbox_20_20.dds"
+	}
+	spriteType = {
+		name = "GFX_CM_panel_checkbox_125_20"
+		texturefile = "gfx//interface//CM_panel_checkbox_125_20.dds"
+	}
+	spriteType = {
+		name = "GFX_CM_panel_checkbox_150_20"
+		texturefile = "gfx//interface//CM_panel_checkbox_150_20.dds"
+	}
+	spriteType = {
+		name = "GFX_CM_panel_checkbox_175_20"
+		texturefile = "gfx//interface//CM_panel_checkbox_175_20.dds"
+	}
+	
+	spriteType = {
+		name = "GFX_CM_state_filter_icons"
+		texturefile = "gfx//interface//CM_state_filter_icons.dds"
+		noOfFrames = 3
+	}
+	spriteType = {
+		name = "GFX_CM_panel_order_filter_icons"
+		texturefile = "gfx//interface//CM_panel_order_filter_icons.dds"
+		noOfFrames = 2
+	}
+}

@@ -1,0 +1,525 @@
+guiTypes = {
+	containerWindowType = {
+		name = "Country_Construction_Management_container"
+		orientation = UPPER_RIGHT
+		clipping = no
+		
+		iconType = {
+			name = "CM_infrastructure_construction_focus_icon"
+			position = { x = -80 y = 128 }
+			spriteType = "GFX_occupation_policy_button_selected"
+			scale = 0.475
+			alwaystransparent = yes
+		}
+		buttonType = {
+			name = "CM_construct_country_infrastructure_button"
+			position = { x = -77 y = 132 }
+			spriteType = "GFX_boost_building_button"
+			scale = 0.7
+			pdx_tooltip = "CM_construct_mining_infrastructure_tooltip"
+			pdx_tooltip_delayed = "CM_pre_get_mining_infrastructure_delayed_tooltip"
+			clicksound = click_default
+		}
+		
+		iconType = {
+			name = "CM_industrial_complexes_construction_focus_icon"
+			position = { x = -34 y = 273 }
+			spriteType = "GFX_occupation_policy_button_selected"
+			scale = 0.475
+			alwaystransparent = yes
+		}
+		buttonType = {
+			name = "CM_construct_country_industrial_complexes_button"
+			position = { x = -31 y = 277 }
+			spriteType = "GFX_boost_building_button"
+			scale = 0.7
+			pdx_tooltip = "CM_construct_industrial_complexes_tooltip"
+			pdx_tooltip_delayed = "CM_pre_get_industrial_complexes_delayed_tooltip"
+			clicksound = click_default
+		}
+		
+		iconType = {
+			name = "CM_arms_factories_construction_focus_icon"
+			position = { x = -80 y = 273 }
+			spriteType = "GFX_occupation_policy_button_selected"
+			scale = 0.475
+			alwaystransparent = yes
+		}
+		buttonType = {
+			name = "CM_construct_country_arms_factories_button"
+			position = { x = -77 y = 277 }
+			spriteType = "GFX_boost_building_button"
+			scale = 0.7
+			pdx_tooltip = "CM_construct_arms_factories_tooltip"
+			pdx_tooltip_delayed = "CM_pre_get_arms_factories_delayed_tooltip"
+			clicksound = click_default
+		}
+		
+		iconType = {
+			name = "CM_naval_dockyards_construction_focus_icon"
+			position = { x = -80 y = 316 }
+			spriteType = "GFX_occupation_policy_button_selected"
+			scale = 0.475
+			alwaystransparent = yes
+		}
+		buttonType = {
+			name = "CM_construct_country_naval_dockyards_button"
+			position = { x = -77 y = 320 }
+			spriteType = "GFX_boost_building_button"
+			scale = 0.7
+			pdx_tooltip = "CM_construct_naval_dockyards_tooltip"
+			pdx_tooltip_delayed = "CM_pre_get_naval_dockyards_delayed_tooltip"
+			clicksound = click_default
+		}
+		
+		buttonType = {
+			name = "CM_ROI_button"
+			position = { x = -60 y = 380 }
+			spriteType = "GFX_generic_square_button"
+			buttonText = "[GetCMROIButtonText]"
+			buttonFont = "hoi_18b"
+			pdx_tooltip = "CM_pre_get_ROI_tooltip"
+			pdx_tooltip_delayed = "CM_change_ROI_factor_delayed_tooltip"
+			shortcut = "TAB"
+			clicksound = click_default
+		}
+		
+		iconType = {
+			name = "CM_priority_states_filter_icon"
+			position = { x = -63 y = 580 }
+			spriteType = "GFX_occupation_policy_button_selected"
+			scale = 1.2
+			alwaystransparent = yes
+		}
+		buttonType = {
+			name = "CM_states_filter_button"
+			position = { x = -59 y = 584 }
+			quadTextureSprite = "GFX_CM_state_filter_icons"
+			scale = 0.83
+			pdx_tooltip = "CM_pre_get_targets_filter_tooltip"
+			pdx_tooltip_delayed = "CM_targets_filter_delayed_tooltip"
+			clicksound = click_default
+		}
+		
+		buttonType = {
+			name = "CM_show_panel_button"
+			position = { x = -94 y = 9 }
+			spriteType = "GFX_toggle_navalbattle_details"
+			scale = 0.75
+			pdx_tooltip = "CM_show_panel_tooltip"
+			clicksound = click_default
+		}
+	}
+	
+	containerWindowType = {
+		name = "Country_Constructions_Panel_window"
+		orientation = CENTER
+		origo = CENTER
+		moveable = yes
+		clipping = no
+		click_to_front = yes
+		
+		background = {
+			name = "CM_panel_background"
+			spriteType = "GFX_CM_panel_background"
+		}
+		
+		buttonType = {
+			name = "CM_free_slots_filter_panel_button"
+			position = { x = 23 y = 10 }
+			spriteType = "GFX_no_building"
+			scale = 0.7
+			pdx_tooltip = "CM_free_slots_filter_panel_tooltip"
+			shortcut = "r"
+			clicksound = click_default
+		}
+		
+		instantTextBoxType = {
+			name = "CM_panel_title_textbox"
+			position = { x = 0 y = 12 }
+			text = "CM_panel_title_text"
+			font = "hoi_36header"
+			maxWidth = 1000
+			maxHeight = 32
+			fixedsize = yes
+			format = center
+			orientation = "CENTER_UP"
+			alwaystransparent = yes
+		}
+		
+		buttonType = {
+			name = "CM_close_panel_button"
+			position = { x = 954 y = 10 }
+			spriteType = "GFX_closebutton"
+			pdx_tooltip = "CLOSE"
+			shortcut = "ESCAPE"
+			clicksound = click_close
+		}
+		
+		instantTextBoxType = {
+			name = "CM_panel_civ_to_mil_coefficient_textbox"
+			position = { x = 23 y = 790 }
+			text = "CM_panel_civ_to_mil_coefficient_text"
+			font = "hoi_16mbs"
+			maxWidth = 1000
+			maxHeight = 32
+			fixedsize = yes
+			format = center
+			orientation = "DOWN_LEFT"
+			alwaystransparent = yes
+		}
+		
+		containerWindowType = {
+			name = "CM_states_panel"
+			position = { x = 23 y = 58 }
+			orientation = UPPER_RIGHT
+			clipping = no
+			
+			buttonType = {
+				name = "CM_states_ownership_filter_panel_button"
+				position = { x = 0 y = -6 }
+				quadTextureSprite = "GFX_CM_state_filter_icons"
+				scale = 0.6
+				pdx_tooltip = "CM_states_ownership_filter_panel_tooltip"
+				pdx_tooltip_delayed = "CM_states_ownership_filter_panel_delayed_tooltip"
+				clicksound = click_default
+			}
+			iconType = {
+				name = "CM_show_blocked_for_QCF_icon"
+				position = { x = -6 y = -3 }
+				spriteType = "GFX_remove_icon"
+				scale = 0.625
+				alwaystransparent = yes
+			}
+			
+			buttonType = {
+				name = "CM_states_names_panel_button"
+				position = { x = 35 y = 0 }
+				font = "hoi_16mbs"
+				buttonText = "CONSTRUCTION_STATE"
+				spriteType = "GFX_CM_panel_checkbox_175_20"
+				format = center
+				pdx_tooltip = "CM_states_names_panel_tooltip"
+				clicksound = click_default
+			}
+			iconType = {
+				name = "CM_states_names_panel_icon"
+				position = { x = 185 y = 2 }
+				quadTextureSprite = "GFX_CM_panel_order_filter_icons"
+				alwaystransparent = yes
+			}
+			
+			buttonType = {
+				name = "CM_state_oil_panel_button"
+				position = { x = 214 y = -2 }
+				spriteType = "GFX_resources_strip"
+				frame = 1
+				scale = 0.875
+				pdx_tooltip = "CM_state_resources_panel_tooltip"
+				clicksound = click_default
+			}
+			buttonType = {
+				name = "CM_state_aluminum_panel_button"
+				position = { x = 239 y = -2 }
+				spriteType = "GFX_resources_strip"
+				frame = 2
+				scale = 0.875
+				pdx_tooltip = "CM_state_resources_panel_tooltip"
+				clicksound = click_default
+			}
+			buttonType = {
+				name = "CM_state_rubber_panel_button"
+				position = { x = 264 y = -2 }
+				spriteType = "GFX_resources_strip"
+				frame = 3
+				scale = 0.875
+				pdx_tooltip = "CM_state_resources_panel_tooltip"
+				clicksound = click_default
+			}
+			buttonType = {
+				name = "CM_state_tungsten_panel_button"
+				position = { x = 289 y = -2 }
+				spriteType = "GFX_resources_strip"
+				frame = 4
+				scale = 0.875
+				pdx_tooltip = "CM_state_resources_panel_tooltip"
+				clicksound = click_default
+			}
+			buttonType = {
+				name = "CM_state_steel_panel_button"
+				position = { x = 314 y = -2 }
+				spriteType = "GFX_resources_strip"
+				frame = 5
+				scale = 0.875
+				pdx_tooltip = "CM_state_resources_panel_tooltip"
+				clicksound = click_default
+			}
+			buttonType = {
+				name = "CM_state_chromium_panel_button"
+				position = { x = 339 y = -2 }
+				spriteType = "GFX_resources_strip"
+				frame = 6
+				scale = 0.875
+				pdx_tooltip = "CM_state_resources_panel_tooltip"
+				clicksound = click_default
+			}
+			buttonType = {
+				name = "CM_state_crystals_panel_button"
+				position = { x = 364 y = -2 }
+				spriteType = "GFX_resources_strip"
+				frame = 7
+				scale = 0.875
+				pdx_tooltip = "CM_state_resources_panel_tooltip"
+				clicksound = click_default
+			}
+			
+			buttonType = {
+				name = "CM_state_construction_speed_panel_button"
+				position = { x = 395 y = 0 }
+				font = "hoi_16mbs"
+				text = "MODIFIER_PRODUCTION_SPEED_BUILDINGS_FACTOR"
+				spriteType = "GFX_CM_panel_checkbox_150_20"
+				format = center
+				pdx_tooltip = "CM_state_construction_speed_panel_tooltip"
+				clicksound = click_default
+			}
+			iconType = {
+				name = "CM_state_construction_speed_panel_icon"
+				position = { x = 543 y = 2 }
+				quadTextureSprite = "GFX_CM_panel_order_filter_icons"
+				alwaystransparent = yes
+			}
+			
+			buttonType = {
+				name = "CM_state_industrial_complex_construction_speed_panel_button"
+				position = { x = 560 y = 0 }
+				font = "hoi_16mbs"
+				text = "CM_industrial_complexes_loc_key"
+				spriteType = "GFX_CM_panel_checkbox_125_20"
+				format = center
+				pdx_tooltip = "CM_state_industrial_complex_construction_speed_panel_tooltip"
+				clicksound = click_default
+			}
+			iconType = {
+				name = "CM_state_industrial_complex_construction_speed_panel_icon"
+				position = { x = 665 y = 2 }
+				quadTextureSprite = "GFX_CM_panel_order_filter_icons"
+				alwaystransparent = yes
+			}
+			
+			buttonType = {
+				name = "CM_state_arms_factory_construction_speed_panel_button"
+				position = { x = 685 y = 0 }
+				font = "hoi_16mbs"
+				text = "CM_arms_factories_loc_key"
+				spriteType = "GFX_CM_panel_checkbox_125_20"
+				format = center
+				pdx_tooltip = "CM_state_arms_factory_construction_speed_panel_tooltip"
+				clicksound = click_default
+			}
+			iconType = {
+				name = "CM_state_arms_factory_construction_speed_panel_icon"
+				position = { x = 801 y = 2 }
+				quadTextureSprite = "GFX_CM_panel_order_filter_icons"
+				alwaystransparent = yes
+			}
+			
+			buttonType = {
+				name = "CM_state_naval_dockyard_construction_speed_panel_button"
+				position = { x = 810 y = 0 }
+				font = "hoi_16mbs"
+				text = "CM_naval_dockyards_loc_key"
+				spriteType = "GFX_CM_panel_checkbox_125_20"
+				format = center
+				pdx_tooltip = "CM_state_naval_dockyard_construction_speed_panel_tooltip"
+				clicksound = click_default
+			}
+			iconType = {
+				name = "CM_state_naval_dockyard_construction_speed_panel_icon"
+				position = { x = 920 y = 2 }
+				quadTextureSprite = "GFX_CM_panel_order_filter_icons"
+				alwaystransparent = yes
+			}
+		}
+		
+		containerWindowType = {
+			name = "CM_states_list_panel_container"
+			position = { x = 27 y = 75 }
+			size = { width = 956 height = 485 }
+			margin = { top = 9 bottom = 9 }
+			verticalScrollbar = "right_vertical_slider"
+			
+			background = {
+				name = "CM_states_list_background"
+				spriteType = "GFX_tiled_window_transparent"
+			}
+			
+			gridboxType = {
+				name = "CM_states_list_panel_gridbox"
+				position = { x = 0 y = 5 }
+				padding = { top = 50 bottom = 50 }
+				size = { width = 100%% height = 100%% }
+				slotsize = { width = 270 height = 25 }
+				format = "UPPER_LEFT"
+				max_slots_horizontal = 1
+			}
+		}
+	}
+	
+	containerWindowType = {
+		name = "CM_states_list_panel"
+		
+		buttonType = {
+			name = "CM_state_ownership_panel_button"
+			position = { x = 0 y = -3 }
+			quadTextureSprite = "GFX_CM_state_filter_icons"
+			scale = 0.45
+			pdx_tooltip = "CM_blocked_states_filter_panel_tooltip"
+			clicksound = click_default
+		}
+		iconType = {
+			name = "CM_blocked_for_QCF_icon"
+			position = { x = -4 y = 1 }
+			spriteType = "GFX_remove_icon"
+			scale = 0.45
+			alwaystransparent = yes
+		}
+		
+		buttonType = {
+			name = "CM_state_name_panel_button"
+			position = { x = 31 y = 0 }
+			spriteType = "GFX_CM_panel_checkbox_175_20"
+			text = "[THIS.GetName] [?state_and_terrain_strategic_value]"
+			font = "hoi_16mbs"
+			format = left
+			pdx_tooltip = "CM_state_name_panel_tooltip"
+			clicksound = click_default
+		}
+		
+		instantTextBoxType = {
+			name = "CM_state_oil_panel_textbox"
+			position = { x = 210 y = 2 }
+			text = "[GetCMFormatedStateOilCoefficient]"
+			font = "hoi_16mbs"
+			maxWidth = 23
+			maxHeight = 23
+			fixedsize = yes
+			format = center
+		}
+		instantTextBoxType = {
+			name = "CM_state_aluminum_panel_textbox"
+			position = { x = 235 y = 2 }
+			text = "[GetCMFormatedStateAluminumCoefficient]"
+			font = "hoi_16mbs"
+			maxWidth = 23
+			maxHeight = 23
+			fixedsize = yes
+			format = center
+		}
+		instantTextBoxType = {
+			name = "CM_state_rubber_panel_textbox"
+			position = { x = 260 y = 2 }
+			text = "[GetCMFormatedStateRubberCoefficient]"
+			font = "hoi_16mbs"
+			maxWidth = 23
+			maxHeight = 23
+			fixedsize = yes
+			format = center
+		}
+		instantTextBoxType = {
+			name = "CM_state_tungsten_panel_textbox"
+			position = { x = 285 y = 2 }
+			text = "[GetCMFormatedStateTungstenCoefficient]"
+			font = "hoi_16mbs"
+			maxWidth = 23
+			maxHeight = 23
+			fixedsize = yes
+			format = center
+		}
+		instantTextBoxType = {
+			name = "CM_state_steel_panel_textbox"
+			position = { x = 310 y = 2 }
+			text = "[GetCMFormatedStateSteelCoefficient]"
+			font = "hoi_16mbs"
+			maxWidth = 23
+			maxHeight = 23
+			fixedsize = yes
+			format = center
+		}
+		instantTextBoxType = {
+			name = "CM_state_chromium_panel_textbox"
+			position = { x = 335 y = 2 }
+			text = "[GetCMFormatedStateChromiumCoefficient]"
+			font = "hoi_16mbs"
+			maxWidth = 23
+			maxHeight = 23
+			fixedsize = yes
+			format = center
+		}
+		instantTextBoxType = {
+			name = "CM_state_crystals_panel_textbox"
+			position = { x = 360 y = 2 }
+			text = "[GetCMFormatedStateCrystalsCoefficient]"
+			font = "hoi_16mbs"
+			maxWidth = 23
+			maxHeight = 23
+			fixedsize = yes
+			format = center
+		}
+		
+		instantTextBoxType = {
+			name = "CM_state_buildings_construction_speed_panel_textbox"
+			position = { x = 391 y = 2 }
+			text = "[GetCMStateBuildingsConstructionSpeedColor][?CM_state_buildings_construction_speed|=%]"
+			font = "hoi_16mbs"
+			maxWidth = 150
+			maxHeight = 20
+			format = center
+		}
+		instantTextBoxType = {
+			name = "CM_state_industrial_complex_construction_speed_panel_textbox"
+			position = { x = 556 y = 2 }
+			text = "[GetCMStateIndustrialComplexesConstructionSpeedColor][?CM_state_industrial_complex_construction_speed|=%]"
+			font = "hoi_16mbs"
+			maxWidth = 125
+			maxHeight = 20
+			format = center
+		}
+		instantTextBoxType = {
+			name = "CM_state_arms_factory_construction_speed_panel_textbox"
+			position = { x = 681 y = 2 }
+			text = "[GetCMStateArmsFactoriesConstructionSpeedColor][?CM_state_arms_factory_construction_speed|=%]"
+			font = "hoi_16mbs"
+			maxWidth = 125
+			maxHeight = 20
+			format = center
+		}
+		instantTextBoxType = {
+			name = "CM_state_naval_dockyard_construction_speed_panel_textbox"
+			position = { x = 806 y = 2 }
+			text = "[GetCMInfoWindowDockyardsConstructionSpeed]"
+			font = "hoi_16mbs"
+			maxWidth = 125
+			maxHeight = 20
+			format = center
+		}
+	}
+	
+	containerWindowType = {
+		name = "State_Construction_Management_window"
+		orientation = UPPER_RIGHT
+		clipping = no
+		
+		iconType = {
+			name = "CM_background"
+			position = { x = 0 y = 50 }
+			spriteType = "GFX_constructions_bg3"
+		}
+		buttonType = {
+			name = "CM_construct_state_infrastructure_button"
+			position = { x = -79 y = 132 }
+			spriteType = "GFX_boost_building_button"
+			scale = 0.7
+		}
+	}
+}

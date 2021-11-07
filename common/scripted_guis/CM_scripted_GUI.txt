@@ -1,0 +1,1444 @@
+scripted_gui = {
+	Country_Construction_Management = {
+		window_name = "Country_Construction_Management_container"
+		parent_window_token = construction_tab
+		
+		visible = {
+			is_ai = no
+		}
+		
+		triggers = {
+			CM_infrastructure_construction_focus_icon_visible = {
+				check_variable = { CM_construction_focus_ID = -1 }
+			}
+			
+			CM_industrial_complexes_construction_focus_icon_visible = {
+				OR = {
+					check_variable = { CM_construction_focus_ID = 1 }
+					check_variable = { CM_construction_focus_ID = 10 }
+				}
+			}
+			CM_arms_factories_construction_focus_icon_visible = {
+				OR = {
+					check_variable = { CM_construction_focus_ID = 2 }
+					check_variable = { CM_construction_focus_ID = 20 }
+				}
+			}
+			CM_naval_dockyards_construction_focus_icon_visible = {
+				OR = {
+					check_variable = { CM_construction_focus_ID = 3 }
+					check_variable = { CM_construction_focus_ID = 30 }
+				}
+			}
+			
+			CM_priority_states_filter_icon_visible = {
+				has_country_flag = CM_priority_states_filter_on_flag
+			}
+			
+			CM_states_filter_button = {
+				check_variable = {
+					var = CM_states_filter_regime
+					compare = not_equals
+					value = 2
+				}
+			}
+		}
+		
+		properties = {
+			CM_states_filter_button = {
+				frame = "CM_states_filter_regime?1"
+			}
+		}
+		
+		effects = {
+			CM_construct_country_infrastructure_button_click = {
+				if = {
+					limit = { CM_can_possible_construct_infrastructure = yes }
+					
+					set_temp_variable = { CM_temp_num_of_available_civilian_factories_for_check = num_of_available_civilian_factories }
+					
+					if = {
+						limit = { check_variable = { CM_infrastructure_construction_targets^num > 0 } }
+						
+						CM_check_infrastructure_construction_targets_for_targeted_infrastructure_level = yes
+						
+						if = {
+							limit = { check_variable = { CM_infrastructure_construction_targets^num > 0 } }
+							
+							CM_check_infrastructure_construction_targets_for_ongoing_construction = yes
+							
+							if = {
+								limit = { num_of_available_civilian_factories > 0 }
+								
+								CM_add_infrastructure_construction = yes
+							}
+						}
+						else = {
+							CM_add_infrastructure_construction = yes
+						}
+					}
+					else = {
+						CM_add_infrastructure_construction = yes
+					}
+				}
+			}
+			CM_construct_country_infrastructure_button_shift_click = {
+				if = {
+					limit = { CM_can_possible_construct_infrastructure = yes }
+					
+					if = {
+						limit = { check_variable = { CM_infrastructure_construction_targets^num > 0 } }
+						
+						CM_check_infrastructure_construction_targets_for_targeted_infrastructure_level = yes
+						
+						if = {
+							limit = { check_variable = { CM_infrastructure_construction_targets^num > 0 } }
+							
+							CM_check_infrastructure_construction_targets_for_ongoing_construction_with_temp_variable_for_check = yes
+							
+							if = {
+								limit = { num_of_available_civilian_factories > 0 }
+								
+								CM_add_infrastructure_constructions = yes
+							}
+						}
+						else = {
+							CM_add_infrastructure_constructions = yes
+						}
+					}
+					else = {
+						CM_add_infrastructure_constructions = yes
+					}
+				}
+			}
+			CM_construct_country_infrastructure_button_right_click = {
+				if = {
+					limit = {
+						check_variable = {
+							var = CM_construction_focus_ID
+							compare = not_equals
+							value = -1
+						}
+					}
+					
+					if = {
+						limit = { CM_can_possible_increase_resources = yes }
+						
+						if = {
+							limit = { check_variable = { CM_infrastructure_construction_targets^num > 0 } }
+							
+							CM_check_infrastructure_construction_targets_for_targeted_infrastructure_level = yes
+							
+							if = {
+								limit = {
+									check_variable = { CM_infrastructure_construction_targets^num > 0 }
+									num_of_available_civilian_factories > 0
+								}
+								
+								CM_check_infrastructure_construction_targets_for_ongoing_construction_with_temp_variable_for_check = yes
+							}
+						}
+						
+						if = {
+							limit = { num_of_available_civilian_factories > 0 }
+							
+							CM_add_infrastructure_constructions = yes
+						}
+						
+						set_variable = { CM_construction_focus_ID = -1 }
+					}
+				}
+				else = {
+					clear_variable = CM_construction_focus_ID
+				}
+			}
+			
+			CM_construct_country_industrial_complexes_button_click = {
+				if = {
+					limit = { CM_can_possible_construct_industrial_complex = yes }
+					
+					if = {
+						limit = { has_country_flag = CM_show_panel_flag }
+						
+						CM_copy_objects_for_industrial_complex_construction = yes
+						CM_add_industrial_complex_construction_while_loop_effect = yes
+					}
+					else = {
+						CM_calculate_objects_for_industrial_complex_construction = yes
+						CM_add_industrial_complex_construction_while_loop_effect = yes
+						CM_clear_temp_possible_buildings_construction_targets_objects = yes
+					}
+				}
+			}
+			CM_construct_country_industrial_complexes_button_control_click = {
+				if = {
+					limit = { CM_can_possible_construct_industrial_complex = yes }
+					
+					if = {
+						limit = { has_country_flag = CM_show_panel_flag }
+						
+						CM_copy_objects_for_industrial_complex_construction = yes
+						CM_add_industrial_complexes_construction_while_loop_effect = yes
+					}
+					else = {
+						CM_calculate_objects_for_industrial_complex_construction = yes
+						CM_add_industrial_complexes_construction_while_loop_effect = yes
+						CM_clear_temp_possible_buildings_construction_targets_objects = yes
+					}
+				}
+			}
+			CM_construct_country_industrial_complexes_button_shift_click = {
+				if = {
+					limit = { CM_can_possible_construct_industrial_complex = yes }
+					
+					CM_add_industrial_complex_constructions = yes
+				}
+			}
+			CM_construct_country_industrial_complexes_button_control_shift_click = {
+				if = {
+					limit = { CM_can_possible_construct_industrial_complex = yes }
+					
+					if = {
+						limit = { has_country_flag = CM_show_panel_flag }
+						
+						CM_copy_objects_for_industrial_complex_construction = yes
+						CM_add_industrial_complexes_constructions_while_loop_effect = yes
+					}
+					else = {
+						CM_calculate_objects_for_industrial_complex_construction = yes
+						CM_add_industrial_complexes_constructions_while_loop_effect = yes
+						CM_clear_temp_possible_buildings_construction_targets_objects = yes
+					}
+				}
+			}
+			CM_construct_country_industrial_complexes_button_right_click = {
+				if = {
+					limit = {
+						check_variable = {
+							var = CM_construction_focus_ID
+							compare = not_equals
+							value = 1
+						}
+					}
+					
+					if = {
+						limit = {
+							OR = {
+								check_variable = { CM_construction_focus_ID = 10 }
+								CM_any_defined_scopes_have_possible_free_industrial_complexes_slots = yes
+							}
+						}
+						
+						if = {
+							limit = { num_of_available_civilian_factories > 0 }
+							
+							CM_add_industrial_complex_constructions = yes
+						}
+						
+						set_variable = { CM_construction_focus_ID = 1 }
+					}
+				}
+				else = {
+					clear_variable = CM_construction_focus_ID
+				}
+			}
+			CM_construct_country_industrial_complexes_button_alt_right_click = {
+				if = {
+					limit = {
+						check_variable = {
+							var = CM_construction_focus_ID
+							compare = not_equals
+							value = 10
+						}
+					}
+					
+					CM_update_infrastructure_construction_targets_array = yes
+					
+					if = {
+						limit = {
+							OR = {
+								check_variable = { CM_construction_focus_ID = 1 }
+								CM_any_defined_scopes_have_possible_free_industrial_complexes_slots = yes
+							}
+						}
+						
+						if = {
+							limit = { num_of_available_civilian_factories > 0 }
+							
+							CM_calculate_country_variables_for_automatic_industrial_complexes_construction = yes
+							CM_add_industrial_complexes_and_infrastructure_constructions = yes
+						}
+						
+						set_variable = { CM_construction_focus_ID = 10 }
+					}
+				}
+				else = {
+					clear_variable = CM_construction_focus_ID
+				}
+			}
+			
+			CM_construct_country_arms_factories_button_click = {
+				if = {
+					limit = { CM_can_possible_construct_arms_factory = yes }
+					
+					if = {
+						limit = { has_country_flag = CM_show_panel_flag }
+						
+						CM_copy_objects_for_arms_factory_construction = yes
+						CM_add_arms_factory_construction_while_loop_effect = yes
+					}
+					else = {
+						CM_calculate_objects_for_arms_factory_construction = yes
+						CM_add_arms_factory_construction_while_loop_effect = yes
+						CM_clear_temp_possible_buildings_construction_targets_objects = yes
+					}
+				}
+			}
+			CM_construct_country_arms_factories_button_control_click = {
+				if = {
+					limit = { CM_can_possible_construct_arms_factory = yes }
+					
+					if = {
+						limit = { has_country_flag = CM_show_panel_flag }
+						
+						CM_copy_objects_for_arms_factory_construction = yes
+						CM_add_arms_factories_construction_while_loop_effect = yes
+					}
+					else = {
+						CM_calculate_objects_for_arms_factory_construction = yes
+						CM_add_arms_factories_construction_while_loop_effect = yes
+						CM_clear_temp_possible_buildings_construction_targets_objects = yes
+					}
+				}
+			}
+			CM_construct_country_arms_factories_button_shift_click = {
+				if = {
+					limit = { CM_can_possible_construct_arms_factory = yes }
+					
+					CM_add_arms_factory_constructions = yes
+				}
+			}
+			CM_construct_country_arms_factories_button_control_shift_click = {
+				if = {
+					limit = { CM_can_possible_construct_arms_factory = yes }
+					
+					if = {
+						limit = { has_country_flag = CM_show_panel_flag }
+						
+						CM_copy_objects_for_arms_factory_construction = yes
+						CM_add_arms_factories_constructions_while_loop_effect = yes
+					}
+					else = {
+						CM_calculate_objects_for_arms_factory_construction = yes
+						CM_add_arms_factories_constructions_while_loop_effect = yes
+						CM_clear_temp_possible_buildings_construction_targets_objects = yes
+					}
+				}
+			}
+			CM_construct_country_arms_factories_button_right_click = {
+				if = {
+					limit = {
+						check_variable = {
+							var = CM_construction_focus_ID
+							compare = not_equals
+							value = 2
+						}
+					}
+					
+					if = {
+						limit = { CM_any_defined_scopes_have_possible_free_arms_factories_slots = yes }
+						
+						if = {
+							limit = { num_of_available_civilian_factories > 0 }
+							
+							CM_add_arms_factory_constructions = yes
+						}
+						
+						set_variable = { CM_construction_focus_ID = 2 }
+					}
+				}
+				else = {
+					clear_variable = CM_construction_focus_ID
+				}
+			}
+			CM_construct_country_arms_factories_button_alt_right_click = {
+				if = {
+					limit = {
+						check_variable = {
+							var = CM_construction_focus_ID
+							compare = not_equals
+							value = 20
+						}
+					}
+					
+					CM_update_infrastructure_construction_targets_array = yes
+					
+					if = {
+						limit = {
+							OR = {
+								check_variable = { CM_construction_focus_ID = 2 }
+								CM_any_defined_scopes_have_possible_free_arms_factories_slots = yes
+							}
+						}
+						
+						if = {
+							limit = { num_of_available_civilian_factories > 0 }
+							
+							CM_calculate_country_variables_for_automatic_arms_factories_construction = yes
+							CM_add_arms_factories_and_infrastructure_constructions = yes
+						}
+						
+						set_variable = { CM_construction_focus_ID = 20 }
+					}
+				}
+				else = {
+					clear_variable = CM_construction_focus_ID
+				}
+			}
+			
+			CM_construct_country_naval_dockyards_button_click = {
+				if = {
+					limit = { CM_can_possible_construct_naval_dockyard = yes }
+					
+					if = {
+						limit = { has_country_flag = CM_show_panel_flag }
+						
+						CM_copy_objects_for_naval_dockyard_construction = yes
+						CM_add_naval_dockyard_construction_while_loop_effect = yes
+					}
+					else = {
+						CM_calculate_objects_for_naval_dockyard_construction = yes
+						CM_add_naval_dockyard_construction_while_loop_effect = yes
+						CM_clear_temp_possible_buildings_construction_targets_objects = yes
+					}
+				}
+			}
+			CM_construct_country_naval_dockyards_button_control_click = {
+				if = {
+					limit = { CM_can_possible_construct_naval_dockyard = yes }
+					
+					if = {
+						limit = { has_country_flag = CM_show_panel_flag }
+						
+						CM_copy_objects_for_naval_dockyard_construction = yes
+						CM_add_naval_dockyards_construction_while_loop_effect = yes
+					}
+					else = {
+						CM_calculate_objects_for_naval_dockyard_construction = yes
+						CM_add_naval_dockyards_construction_while_loop_effect = yes
+						CM_clear_temp_possible_buildings_construction_targets_objects = yes
+					}
+				}
+			}
+			CM_construct_country_naval_dockyards_button_shift_click = {
+				if = {
+					limit = { CM_can_possible_construct_naval_dockyard = yes }
+					
+					CM_add_naval_dockyard_constructions = yes
+				}
+			}
+			CM_construct_country_naval_dockyards_button_control_shift_click = {
+				if = {
+					limit = { CM_can_possible_construct_naval_dockyard = yes }
+					
+					if = {
+						limit = { has_country_flag = CM_show_panel_flag }
+						
+						CM_copy_objects_for_naval_dockyard_construction = yes
+						CM_add_naval_dockyards_constructions_while_loop_effect = yes
+					}
+					else = {
+						CM_calculate_objects_for_naval_dockyard_construction = yes
+						CM_add_naval_dockyards_constructions_while_loop_effect = yes
+						CM_clear_temp_possible_buildings_construction_targets_objects = yes
+					}
+				}
+			}
+			CM_construct_country_naval_dockyards_button_right_click = {
+				if = {
+					limit = {
+						check_variable = {
+							var = CM_construction_focus_ID
+							compare = not_equals
+							value = 3
+						}
+					}
+					
+					if = {
+						limit = { CM_any_defined_scopes_have_possible_free_naval_dockyards_slots = yes }
+						
+						if = {
+							limit = { num_of_available_civilian_factories > 0 }
+							
+							CM_add_naval_dockyard_constructions = yes
+						}
+						
+						set_variable = { CM_construction_focus_ID = 3 }
+					}
+				}
+				else = {
+					clear_variable = CM_construction_focus_ID
+				}
+			}
+			CM_construct_country_naval_dockyards_button_alt_right_click = {
+				if = {
+					limit = {
+						check_variable = {
+							var = CM_construction_focus_ID
+							compare = not_equals
+							value = 30
+						}
+					}
+					
+					CM_update_infrastructure_construction_targets_array = yes
+					
+					if = {
+						limit = {
+							OR = {
+								check_variable = { CM_construction_focus_ID = 2 }
+								CM_any_defined_scopes_have_possible_free_naval_dockyards_slots = yes
+							}
+						}
+						
+						if = {
+							limit = { num_of_available_civilian_factories > 0 }
+							
+							CM_calculate_country_variables_for_automatic_naval_dockyards_construction = yes
+							CM_add_naval_dockyards_and_infrastructure_constructions = yes
+						}
+						
+						set_variable = { CM_construction_focus_ID = 30 }
+					}
+				}
+				else = {
+					clear_variable = CM_construction_focus_ID
+				}
+			}
+			
+			CM_ROI_button_click = {
+				if = {
+					limit = { has_variable = CM_ROI_coefficient }
+					
+					if = {
+						limit = { check_variable = { CM_ROI_coefficient = 3 } }
+						
+						set_variable = { CM_ROI_coefficient = 1 }
+					}
+					else = {
+						add_to_variable = { CM_ROI_coefficient = 1 }
+					}
+				}
+				else = {
+					set_variable = { CM_ROI_coefficient = 2 }
+				}
+			}
+			
+			CM_states_filter_button_click = {
+				if = {
+					limit = { check_variable = { CM_states_filter_regime?1 = 1 } }
+					
+					set_variable = { CM_states_filter_regime = 3 }
+				}
+				else = {
+					subtract_from_variable = { CM_states_filter_regime = 1 }
+					
+					if = {
+						limit = { check_variable = { CM_states_filter_regime = 2 } }
+						
+						clr_country_flag = CM_priority_states_filter_on_flag
+					}
+				}
+			}
+			CM_states_filter_button_right_click = {
+				if = {
+					limit = { has_country_flag = CM_priority_states_filter_on_flag }
+					
+					clr_country_flag = CM_priority_states_filter_on_flag
+				}
+				else = {
+					set_country_flag = CM_priority_states_filter_on_flag
+				}
+			}
+			
+			CM_show_panel_button_click = {
+				if = {
+					limit = { NOT = { has_country_flag = CM_show_panel_flag } }
+					
+					CM_reconstruct_possible_construction_targets_array = yes
+					
+					set_country_flag = CM_show_panel_flag
+				}
+			}
+		}
+		
+		ai_enabled = {
+			always = no
+		}
+	}
+	
+	Construction_Management_Panel = {
+		window_name = "Country_Constructions_Panel_window"
+		
+		visible = {
+			has_country_flag = CM_show_panel_flag
+		}
+		
+		dynamic_lists = {
+			CM_states_list_panel_gridbox = {
+				array = CM_possible_construction_targets
+				change_scope = yes
+				entry_container = "CM_states_list_panel"
+			}
+		}
+		
+		triggers = {
+			CM_show_blocked_for_QCF_icon_visible = {
+				has_country_flag = CM_show_blocked_for_QCF_flag
+			}
+			
+			CM_states_names_panel_icon_visible = {
+				has_variable = CM_states_names_panel_frame
+			}
+			CM_state_construction_speed_panel_icon_visible = {
+				has_variable = CM_state_construction_speed_panel_frame
+			}
+			CM_state_industrial_complex_construction_speed_panel_icon_visible = {
+				has_variable = CM_state_industrial_complex_construction_speed_panel_frame
+			}
+			CM_state_arms_factory_construction_speed_panel_icon_visible = {
+				has_variable = CM_state_arms_factory_construction_speed_panel_frame
+			}
+			CM_state_naval_dockyard_construction_speed_panel_icon_visible = {
+				has_variable = CM_state_naval_dockyard_construction_speed_panel_frame
+			}
+			
+			CM_blocked_for_QCF_icon_visible = {
+				has_state_flag = CM_blocked_for_QCF_flag
+			}
+		}
+		
+		properties = {
+			CM_free_slots_filter_panel_button = {
+				frame = CM_free_slots_filter_frame?2
+			}
+			
+			CM_states_ownership_filter_panel_button = {
+				frame = CM_states_ownership_filter_frame?2
+			}
+			CM_states_names_panel_icon = {
+				frame = CM_states_names_panel_frame?2
+			}
+			CM_state_construction_speed_panel_icon = {
+				frame = CM_state_construction_speed_panel_frame?2
+			}
+			CM_state_industrial_complex_construction_speed_panel_icon = {
+				frame = CM_state_industrial_complex_construction_speed_panel_frame?2
+			}
+			CM_state_arms_factory_construction_speed_panel_icon = {
+				frame = CM_state_arms_factory_construction_speed_panel_frame?2
+			}
+			CM_state_naval_dockyard_construction_speed_panel_icon = {
+				frame = CM_state_naval_dockyard_construction_speed_panel_frame?2
+			}
+			
+			CM_state_ownership_panel_button = {
+				frame = CM_state_ownership_frame?2
+			}
+		}
+		
+		effects = {
+			CM_free_slots_filter_panel_button_click = {
+				CM_clear_possible_construction_targets_objects = yes
+				
+				if = {
+					limit = { check_variable = { CM_free_slots_filter_frame = 1 } }
+					
+					if = {
+						limit = { has_country_flag = CM_show_blocked_for_QCF_flag }
+						
+						if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 1 } }
+							
+							for_each_scope_loop = {
+								array = core_states
+								
+								if = {
+									limit = { CM_is_owned_and_controlled_and_blocked_for_QCF = yes }
+									CM_add_to_possible_construction_cored_targets_array = yes
+								}
+							}
+						}
+						else_if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 3 } }
+							
+							for_each_scope_loop = {
+								array = owned_controlled_states
+								
+								if = {
+									limit = { has_state_flag = CM_blocked_for_QCF_flag }
+									CM_add_to_possible_construction_owned_and_controlled_targets_array = yes
+								}
+							}
+						}
+						else = { # CM_states_ownership_filter_frame = 2
+							for_each_scope_loop = {
+								array = controlled_states
+								
+								if = {
+									limit = { has_state_flag = CM_blocked_for_QCF_flag }
+									CM_add_to_possible_construction_controlled_targets_array = yes
+								}
+							}
+						}
+					}
+					else = { # NOT = { has_country_flag = CM_show_blocked_for_QCF_flag }
+						if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 1 } }
+							
+							for_each_scope_loop = {
+								array = core_states
+								
+								if = {
+									limit = { is_owned_and_controlled_by = ROOT }
+									CM_add_to_possible_construction_cored_targets_array = yes
+								}
+							}
+						}
+						else_if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 3 } }
+							
+							for_each_scope_loop = {
+								array = owned_controlled_states
+								
+								CM_add_to_possible_construction_owned_and_controlled_targets_array = yes
+							}
+						}
+						else = { # CM_states_ownership_filter_frame = 2
+							for_each_scope_loop = {
+								array = controlled_states
+								
+								CM_add_to_possible_construction_controlled_targets_array = yes
+							}
+						}
+					}
+					
+					set_variable = { CM_free_slots_filter_frame = 2 }
+				}
+				else = { # CM_free_slots_filter_frame = 2
+					if = {
+						limit = { has_country_flag = CM_show_blocked_for_QCF_flag }
+						
+						if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 1 } }
+							
+							for_each_scope_loop = {
+								array = core_states
+								
+								if = {
+									limit = { CM_is_owned_and_controlled_with_free_building_slots_and_blocked_for_QCF = yes }
+									CM_add_to_possible_construction_cored_targets_array = yes
+								}
+							}
+						}
+						else_if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 3 } }
+							
+							for_each_scope_loop = {
+								array = owned_controlled_states
+								
+								if = {
+									limit = { CM_has_free_building_slot_and_blocked_for_QCF = yes }
+									CM_add_to_possible_construction_owned_and_controlled_targets_array = yes
+								}
+							}
+						}
+						else = { # CM_states_ownership_filter_frame = 2
+							for_each_scope_loop = {
+								array = controlled_states
+								
+								if = {
+									limit = { CM_has_free_building_slot_and_blocked_for_QCF = yes }
+									CM_add_to_possible_construction_controlled_targets_array = yes
+								}
+							}
+						}
+					}
+					else = { # NOT = { has_country_flag = CM_show_blocked_for_QCF_flag }
+						if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 1 } }
+							
+							for_each_scope_loop = {
+								array = core_states
+								
+								if = {
+									limit = { CM_is_owned_and_controlled_with_free_building_slots = yes }
+									CM_add_to_possible_construction_cored_targets_array = yes
+								}
+							}
+						}
+						else_if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 3 } }
+							
+							for_each_scope_loop = {
+								array = owned_controlled_states
+								
+								if = {
+									limit = { CM_has_free_building_slot = yes }
+									CM_add_to_possible_construction_owned_and_controlled_targets_array = yes
+								}
+							}
+						}
+						else = { # CM_states_ownership_filter_frame = 2
+							for_each_scope_loop = {
+								array = controlled_states
+								
+								if = {
+									limit = { CM_has_free_building_slot = yes }
+									CM_add_to_possible_construction_controlled_targets_array = yes
+								}
+							}
+						}
+					}
+					
+					set_variable = { CM_free_slots_filter_frame = 1 }
+				}
+				
+				CM_sort_possible_construction_targets_array = yes
+			}
+			
+			CM_states_ownership_filter_panel_button_click = {
+				CM_clear_possible_construction_targets_objects = yes
+				
+				if = {
+					limit = { check_variable = { CM_states_ownership_filter_frame = 1 } }
+					
+					if = {
+						limit = { has_country_flag = CM_show_blocked_for_QCF_flag }
+						
+						if = {
+							limit = { check_variable = { CM_free_slots_filter_frame = 1 } }
+							
+							for_each_scope_loop = {
+								array = owned_controlled_states
+								
+								if = {
+									limit = { CM_has_free_building_slot_and_blocked_for_QCF = yes }
+									CM_add_to_possible_construction_owned_and_controlled_targets_array = yes
+								}
+							}
+						}
+						else = { # CM_free_slots_filter_frame = 2
+							for_each_scope_loop = {
+								array = owned_controlled_states
+								
+								if = {
+									limit = { has_state_flag = CM_blocked_for_QCF_flag }
+									CM_add_to_possible_construction_owned_and_controlled_targets_array = yes
+								}
+							}
+						}
+					}
+					else = { # NOT = { has_country_flag = CM_show_blocked_for_QCF_flag }
+						if = {
+							limit = { check_variable = { CM_free_slots_filter_frame = 1 } }
+							
+							for_each_scope_loop = {
+								array = owned_controlled_states
+								
+								if = {
+									limit = { CM_has_free_building_slot = yes }
+									CM_add_to_possible_construction_owned_and_controlled_targets_array = yes
+								}
+							}
+						}
+						else = { # CM_free_slots_filter_frame = 2
+							for_each_scope_loop = {
+								array = owned_controlled_states
+								
+								CM_add_to_possible_construction_owned_and_controlled_targets_array = yes
+							}
+						}
+					}
+					
+					set_variable = { CM_states_ownership_filter_frame = 3 }
+				}
+				else_if = {
+					limit = { check_variable = { CM_states_ownership_filter_frame = 3 } }
+					
+					if = {
+						limit = { has_country_flag = CM_show_blocked_for_QCF_flag }
+						
+						if = {
+							limit = { check_variable = { CM_free_slots_filter_frame = 1 } }
+							
+							for_each_scope_loop = {
+								array = controlled_states
+								
+								if = {
+									limit = { CM_has_free_building_slot_and_blocked_for_QCF = yes }
+									CM_add_to_possible_construction_controlled_targets_array = yes
+								}
+							}
+						}
+						else = { # CM_free_slots_filter_frame = 2
+							for_each_scope_loop = {
+								array = controlled_states
+								
+								if = {
+									limit = { has_state_flag = CM_blocked_for_QCF_flag }
+									CM_add_to_possible_construction_controlled_targets_array = yes
+								}
+							}
+						}
+					}
+					else = { # NOT = { has_country_flag = CM_show_blocked_for_QCF_flag }
+						if = {
+							limit = { check_variable = { CM_free_slots_filter_frame = 1 } }
+							
+							for_each_scope_loop = {
+								array = controlled_states
+								
+								if = {
+									limit = { CM_has_free_building_slot = yes }
+									CM_add_to_possible_construction_controlled_targets_array = yes
+								}
+							}
+						}
+						else = { # CM_free_slots_filter_frame = 2
+							for_each_scope_loop = {
+								array = controlled_states
+								
+								CM_add_to_possible_construction_controlled_targets_array = yes
+							}
+						}
+					}
+					
+					set_variable = { CM_states_ownership_filter_frame = 2 }
+				}
+				else = { # CM_free_slots_filter_frame = 2
+					if = {
+						limit = { has_country_flag = CM_show_blocked_for_QCF_flag }
+						
+						if = {
+							limit = { check_variable = { CM_free_slots_filter_frame = 1 } }
+							
+							for_each_scope_loop = {
+								array = core_states
+								
+								if = {
+									limit = { CM_is_owned_and_controlled_with_free_building_slots_and_blocked_for_QCF = yes }
+									CM_add_to_possible_construction_cored_targets_array = yes
+								}
+							}
+						}
+						else = { # CM_free_slots_filter_frame = 2
+							for_each_scope_loop = {
+								array = core_states
+								
+								if = {
+									limit = { CM_is_owned_and_controlled_and_blocked_for_QCF = yes }
+									CM_add_to_possible_construction_cored_targets_array = yes
+								}
+							}
+						}
+					}
+					else = { # NOT = { has_country_flag = CM_show_blocked_for_QCF_flag }
+						if = {
+							limit = { check_variable = { CM_free_slots_filter_frame = 1 } }
+							
+							for_each_scope_loop = {
+								array = core_states
+								
+								if = {
+									limit = { CM_is_owned_and_controlled_with_free_building_slots = yes }
+									CM_add_to_possible_construction_cored_targets_array = yes
+								}
+							}
+						}
+						else = { # CM_free_slots_filter_frame = 2
+							for_each_scope_loop = {
+								array = core_states
+								
+								if = {
+									limit = { is_owned_and_controlled_by = ROOT }
+									CM_add_to_possible_construction_cored_targets_array = yes
+								}
+							}
+						}
+					}
+					
+					set_variable = { CM_states_ownership_filter_frame = 1 }
+				}
+				
+				CM_sort_possible_construction_targets_array = yes
+			}
+			CM_states_ownership_filter_panel_button_right_click = {
+				CM_clear_possible_construction_targets_objects = yes
+				
+				if = {
+					limit = { has_country_flag = CM_show_blocked_for_QCF_flag }
+					
+					if = {
+						limit = { check_variable = { CM_free_slots_filter_frame = 1 } }
+						
+						if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 1 } }
+							
+							for_each_scope_loop = {
+								array = core_states
+								
+								if = {
+									limit = { CM_is_owned_and_controlled_with_free_building_slots = yes }
+									CM_add_to_possible_construction_cored_targets_array = yes
+								}
+							}
+						}
+						else_if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 3 } }
+							
+							for_each_scope_loop = {
+								array = owned_controlled_states
+								
+								if = {
+									limit = { CM_has_free_building_slot = yes }
+									CM_add_to_possible_construction_owned_and_controlled_targets_array = yes
+								}
+							}
+						}
+						else = { # CM_states_ownership_filter_frame = 2
+							for_each_scope_loop = {
+								array = controlled_states
+								
+								if = {
+									limit = { CM_has_free_building_slot = yes }
+									CM_add_to_possible_construction_controlled_targets_array = yes
+								}
+							}
+						}
+					}
+					else = { # CM_free_slots_filter_frame = 2
+						if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 1 } }
+							
+							for_each_scope_loop = {
+								array = core_states
+								
+								if = {
+									limit = { is_owned_and_controlled_by = ROOT }
+									CM_add_to_possible_construction_cored_targets_array = yes
+								}
+							}
+						}
+						else_if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 3 } }
+							
+							for_each_scope_loop = {
+								array = owned_controlled_states
+								
+								CM_add_to_possible_construction_owned_and_controlled_targets_array = yes
+							}
+						}
+						else = { # CM_states_ownership_filter_frame = 2
+							for_each_scope_loop = {
+								array = controlled_states
+								
+								CM_add_to_possible_construction_controlled_targets_array = yes
+							}
+						}
+					}
+					
+					clr_country_flag = CM_show_blocked_for_QCF_flag
+				}
+				else = { # NOT = { has_country_flag = CM_show_blocked_for_QCF_flag }
+					if = {
+						limit = { check_variable = { CM_free_slots_filter_frame = 1 } }
+						
+						if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 1 } }
+							
+							for_each_scope_loop = {
+								array = core_states
+								
+								if = {
+									limit = { CM_is_owned_and_controlled_with_free_building_slots_and_blocked_for_QCF = yes }
+									CM_add_to_possible_construction_cored_targets_array = yes
+								}
+							}
+						}
+						else_if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 3 } }
+							
+							for_each_scope_loop = {
+								array = owned_controlled_states
+								
+								if = {
+									limit = { CM_has_free_building_slot_and_blocked_for_QCF = yes }
+									CM_add_to_possible_construction_owned_and_controlled_targets_array = yes
+								}
+							}
+						}
+						else = { # CM_states_ownership_filter_frame = 2
+							for_each_scope_loop = {
+								array = controlled_states
+								
+								if = {
+									limit = { CM_has_free_building_slot_and_blocked_for_QCF = yes }
+									CM_add_to_possible_construction_controlled_targets_array = yes
+								}
+							}
+						}
+					}
+					else = { # CM_free_slots_filter_frame = 2
+						if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 1 } }
+							
+							for_each_scope_loop = {
+								array = core_states
+								
+								if = {
+									limit = { CM_is_owned_and_controlled_and_blocked_for_QCF = yes }
+									CM_add_to_possible_construction_cored_targets_array = yes
+								}
+							}
+						}
+						else_if = {
+							limit = { check_variable = { CM_states_ownership_filter_frame = 3 } }
+							
+							for_each_scope_loop = {
+								array = owned_controlled_states
+								
+								if = {
+									limit = { has_state_flag = CM_blocked_for_QCF_flag }
+									CM_add_to_possible_construction_owned_and_controlled_targets_array = yes
+								}
+							}
+						}
+						else = { # CM_states_ownership_filter_frame = 2
+							for_each_scope_loop = {
+								array = controlled_states
+								
+								if = {
+									limit = { has_state_flag = CM_blocked_for_QCF_flag }
+									CM_add_to_possible_construction_controlled_targets_array = yes
+								}
+							}
+						}
+					}
+					
+					set_country_flag = CM_show_blocked_for_QCF_flag
+				}
+				
+				CM_sort_possible_construction_targets_array = yes
+			}
+			
+			CM_states_names_panel_button_click = {
+				clear_variable = CM_state_construction_speed_panel_frame
+				clear_variable = CM_state_industrial_complex_construction_speed_panel_frame
+				clear_variable = CM_state_arms_factory_construction_speed_panel_frame
+				clear_variable = CM_state_naval_dockyard_construction_speed_panel_frame
+				
+				CM_prepare_partial_possible_construction_targets_array_reconstruction = yes
+				
+				if = {
+					limit = { check_variable = { CM_panel_sort_mode = 1 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_ascending_state_and_terrain_strategic_value = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else_if = {
+					limit = { check_variable = { CM_panel_sort_mode = -1 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_and_terrain_strategic_value = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else = {
+					CM_construct_possible_construction_targets_array_for_highest_state_and_terrain_strategic_value = yes
+				}
+			}
+			CM_state_construction_speed_panel_button_click = {
+				clear_variable = CM_states_names_panel_frame
+				clear_variable = CM_state_industrial_complex_construction_speed_panel_frame
+				clear_variable = CM_state_arms_factory_construction_speed_panel_frame
+				clear_variable = CM_state_naval_dockyard_construction_speed_panel_frame
+				
+				CM_prepare_partial_possible_construction_targets_array_reconstruction = yes
+				
+				if = {
+					limit = { check_variable = { CM_panel_sort_mode = 10 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_ascending_state_construction_speed = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else_if = {
+					limit = { check_variable = { CM_panel_sort_mode = -10 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_construction_speed = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else = {
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_construction_speed = yes
+					set_variable = { CM_panel_sort_mode = 10 }
+				}
+			}
+			CM_state_industrial_complex_construction_speed_panel_button_click = {
+				clear_variable = CM_states_names_panel_frame
+				clear_variable = CM_state_construction_speed_panel_frame
+				clear_variable = CM_state_arms_factory_construction_speed_panel_frame
+				clear_variable = CM_state_naval_dockyard_construction_speed_panel_frame
+				
+				CM_prepare_partial_possible_construction_targets_array_reconstruction = yes
+				
+				if = {
+					limit = { check_variable = { CM_panel_sort_mode = 20 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_ascending_state_industrial_complexes_construction_speed = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else_if = {
+					limit = { check_variable = { CM_panel_sort_mode = -20 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_industrial_complexes_construction_speed = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else = {
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_industrial_complexes_construction_speed = yes
+					set_variable = { CM_panel_sort_mode = 20 }
+				}
+			}
+			CM_state_arms_factory_construction_speed_panel_button_click = {
+				clear_variable = CM_states_names_panel_frame
+				clear_variable = CM_state_construction_speed_panel_frame
+				clear_variable = CM_state_industrial_complex_construction_speed_panel_frame
+				clear_variable = CM_state_naval_dockyard_construction_speed_panel_frame
+				
+				CM_prepare_partial_possible_construction_targets_array_reconstruction = yes
+				
+				if = {
+					limit = { check_variable = { CM_panel_sort_mode = 30 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_ascending_state_arms_factories_construction_speed = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else_if = {
+					limit = { check_variable = { CM_panel_sort_mode = -30 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_arms_factories_construction_speed = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else = {
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_arms_factories_construction_speed = yes
+					set_variable = { CM_panel_sort_mode = 30 }
+				}
+			}
+			CM_state_naval_dockyard_construction_speed_panel_button_click = {
+				clear_variable = CM_states_names_panel_frame
+				clear_variable = CM_state_construction_speed_panel_frame
+				clear_variable = CM_state_industrial_complex_construction_speed_panel_frame
+				clear_variable = CM_state_arms_factory_construction_speed_panel_frame
+				
+				CM_prepare_partial_possible_construction_targets_array_reconstruction = yes
+				
+				if = {
+					limit = { check_variable = { CM_panel_sort_mode = 40 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_ascending_state_naval_dockyards_construction_speed = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else_if = {
+					limit = { check_variable = { CM_panel_sort_mode = -40 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_naval_dockyards_construction_speed = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else = {
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_naval_dockyards_construction_speed = yes
+					set_variable = { CM_panel_sort_mode = 40 }
+				}
+			}
+			
+			CM_state_oil_panel_button_click = {
+				CM_prepare_possible_construction_targets_array_reconstruction = yes
+				
+				if = {
+					limit = { check_variable = { CM_panel_sort_mode = 100 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_ascending_state_oil_coefficient = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else_if = {
+					limit = { check_variable = { CM_panel_sort_mode = -100 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_oil_coefficient = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else = {
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_oil_coefficient = yes
+					set_variable = { CM_panel_sort_mode = 100 }
+				}
+			}
+			CM_state_aluminum_panel_button_click = {
+				CM_prepare_possible_construction_targets_array_reconstruction = yes
+				
+				if = {
+					limit = { check_variable = { CM_panel_sort_mode = 200 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_ascending_state_aluminum_coefficient = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else_if = {
+					limit = { check_variable = { CM_panel_sort_mode = -200 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_aluminum_coefficient = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else = {
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_aluminum_coefficient = yes
+					set_variable = { CM_panel_sort_mode = 200 }
+				}
+			}
+			CM_state_rubber_panel_button_click = {
+				CM_prepare_possible_construction_targets_array_reconstruction = yes
+				
+				if = {
+					limit = { check_variable = { CM_panel_sort_mode = 300 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_ascending_state_rubber_coefficient = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else_if = {
+					limit = { check_variable = { CM_panel_sort_mode = -300 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_rubber_coefficient = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else = {
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_rubber_coefficient = yes
+					set_variable = { CM_panel_sort_mode = 300 }
+				}
+			}
+			CM_state_tungsten_panel_button_click = {
+				CM_prepare_possible_construction_targets_array_reconstruction = yes
+				
+				if = {
+					limit = { check_variable = { CM_panel_sort_mode = 400 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_ascending_state_tungsten_coefficient = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else_if = {
+					limit = { check_variable = { CM_panel_sort_mode = -400 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_tungsten_coefficient = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else = {
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_tungsten_coefficient = yes
+					set_variable = { CM_panel_sort_mode = 400 }
+				}
+			}
+			CM_state_steel_panel_button_click = {
+				CM_prepare_possible_construction_targets_array_reconstruction = yes
+				
+				if = {
+					limit = { check_variable = { CM_panel_sort_mode = 500 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_ascending_state_steel_coefficient = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else_if = {
+					limit = { check_variable = { CM_panel_sort_mode = -500 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_steel_coefficient = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else = {
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_steel_coefficient = yes
+					set_variable = { CM_panel_sort_mode = 500 }
+				}
+			}
+			CM_state_chromium_panel_button_click = {
+				CM_prepare_possible_construction_targets_array_reconstruction = yes
+				
+				if = {
+					limit = { check_variable = { CM_panel_sort_mode = 600 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_ascending_state_chromium_coefficient = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else_if = {
+					limit = { check_variable = { CM_panel_sort_mode = -600 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_chromium_coefficient = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else = {
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_chromium_coefficient = yes
+					set_variable = { CM_panel_sort_mode = 600 }
+				}
+			}
+			CM_state_crystals_panel_button_click = {
+				CM_prepare_possible_construction_targets_array_reconstruction = yes
+				
+				if = {
+					limit = { check_variable = { CM_panel_sort_mode = 700 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_ascending_state_crystals_coefficient = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else_if = {
+					limit = { check_variable = { CM_panel_sort_mode = -700 } }
+					
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_crystals_coefficient = yes
+					multiply_variable = { CM_panel_sort_mode = -1 }
+				}
+				else = {
+					CM_reconstruct_possible_construction_targets_array_for_descending_state_crystals_coefficient = yes
+					set_variable = { CM_panel_sort_mode = 700 }
+				}
+			}
+			
+			CM_state_ownership_panel_button_click = {
+				if = {
+					limit = { has_state_flag = CM_blocked_for_QCF_flag }
+					
+					clr_state_flag = CM_blocked_for_QCF_flag
+				}
+				else = {
+					set_state_flag = CM_blocked_for_QCF_flag
+				}
+			}
+			
+			CM_state_name_panel_button_click = {
+				ROOT = { goto_state = PREV }
+			}
+			
+			CM_close_panel_button_click = {
+				CM_clear_possible_construction_targets_objects = yes
+				
+				clr_country_flag = CM_show_panel_flag
+			}
+		}
+	}
+	
+	State_Construction_Management = {
+		window_name = "State_Construction_Management_window"
+		parent_window_token = selected_state_view
+		context_type = selected_state_context
+		
+		visible = {
+			ROOT = { is_ai = no }
+			
+			is_owned_and_controlled_by = ROOT
+		}
+		
+		effects = {
+			CM_construct_state_infrastructure_button_click = {
+				
+			}
+		}
+		
+		ai_enabled = {
+			always = no
+		}
+	}
+}

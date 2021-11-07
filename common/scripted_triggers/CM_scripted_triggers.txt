@@ -1,0 +1,711 @@
+########## Country Construction Management Scripted Triggers ##########
+
+CM_is_owned_and_controlled_and_blocked_for_QCF = {
+	is_owned_and_controlled_by = ROOT
+	has_state_flag = CM_blocked_for_QCF_flag
+}
+CM_has_strictly_defined_states_filter = {
+	has_country_flag = CM_priority_states_filter_on_flag
+	check_variable = { CM_states_filter_regime = 2 }
+}
+
+CM_is_new_possible_construction_targets_array = {
+	check_variable = { CM_temp_possible_construction_targets^num = 0 }
+	has_country_flag = CM_priority_states_filter_on_flag
+}
+CM_is_new_possible_infrastructure_construction_targets_array = {
+	OR = {
+		has_country_flag = CM_priority_states_filter_on_flag
+		NOT = { has_country_flag = CM_non_consumed_resources_has_been_added_flag }
+	}
+}
+
+CM_there_is_no_shortage_of_resources = {
+	NOT = {
+		check_variable = { resource@steel < 0 }
+		check_variable = { resource@crystals < 0 }
+		check_variable = { resource@tungsten < 0 }
+		check_variable = { resource@aluminium < 0 }
+		check_variable = { resource@rubber < 0 }
+		check_variable = { resource@chromium < 0 }
+		fuel_ratio < 0.5
+	}
+}
+
+CM_no_possible_construction_sites = {
+	check_variable = { CM_temp_possible_construction_targets^num = 0 }
+	
+	OR = {
+		has_country_flag = CM_controlled_states_has_been_added_flag
+		check_variable = { CM_states_filter_regime = 2 }
+	}
+}
+CM_no_possible_construction_sites_for_infrastructure = {
+	has_country_flag = CM_non_consumed_resources_has_been_added_flag
+	
+	CM_no_possible_construction_sites = yes
+}
+
+CM_temp_num_of_available_civilian_factories_has_been_changed_OR_no_possible_construction_sites = {
+	OR = {
+		check_variable = { CM_temp_num_of_available_civilian_factories_for_check > num_of_available_civilian_factories }
+		CM_no_possible_construction_sites = yes
+	}
+}
+CM_no_available_civilian_factories_OR_no_possible_construction_sites = {
+	OR = {
+		check_variable = { num_of_available_civilian_factories = 0 }
+		CM_no_possible_construction_sites = yes
+	}
+}
+
+CM_is_highest_priority_state_for_buildings_construction = {
+	all_of_scopes = {
+		array = CM_temp_possible_construction_targets
+		
+		check_variable = {
+			var = CM_state_buildings_construction_speed
+			compare = less_than_or_equals
+			value = PREV.CM_state_buildings_construction_speed
+		}
+		
+		if = {
+			limit = {
+				check_variable = { CM_state_buildings_construction_speed = PREV.CM_state_buildings_construction_speed }
+			}
+			
+			check_variable = {
+				var = state_and_terrain_strategic_value
+				compare = less_than_or_equals
+				value = PREV.state_and_terrain_strategic_value
+			}
+		}
+	}
+}
+CM_has_highest_priority_for_buildings_and_infrastructure_construction = {
+	all_of_scopes = {
+		array = CM_temp_possible_construction_targets
+		
+		check_variable = {
+			var = CM_state_average_num_of_days_for_buildings_construction
+			compare = greater_than_or_equals
+			value = PREV.CM_state_average_num_of_days_for_buildings_construction
+		}
+		
+		if = {
+			limit = {
+				check_variable = { CM_state_average_num_of_days_for_buildings_construction = PREV.CM_state_average_num_of_days_for_buildings_construction }
+			}
+			
+			check_variable = {
+				var = CM_state_num_of_infrastructure_for_construction
+				compare = greater_than_or_equals
+				value = PREV.CM_state_num_of_infrastructure_for_construction
+			}
+			
+			if = {
+				limit = { 
+					check_variable = { CM_state_num_of_infrastructure_for_construction = PREV.CM_state_num_of_infrastructure_for_construction }
+				}
+				
+				check_variable = {
+					var = modifier@local_building_slots
+					compare = less_than_or_equals
+					value = PREV.modifier@local_building_slots
+				}
+				
+				if = {
+					limit = {
+						check_variable = { modifier@local_building_slots = PREV.modifier@local_building_slots }
+					}
+					
+					check_variable = {
+						var = state_and_terrain_strategic_value
+						compare = less_than_or_equals
+						value = PREV.state_and_terrain_strategic_value
+					}
+				}
+			}
+		}
+	}
+}
+
+CM_has_resources_with_free_infrastructure_slots = {
+	infrastructure < 10
+	
+	OR = {
+		check_variable = { resource@steel > 0 }
+		check_variable = { resource@crystals > 0 }
+		check_variable = { resource@tungsten > 0 }
+		check_variable = { resource@aluminium > 0 }
+		check_variable = { resource@rubber > 0 }
+		check_variable = { resource@chromium > 0 }
+		check_variable = { resource@oil > 0 }
+	}
+	
+	NOT = { has_state_flag = CM_blocked_for_QCF_flag }
+}
+CM_is_owned_and_controlled_with_possible_free_infrastructure_slots = {
+	is_owned_and_controlled_by = ROOT
+	
+	CM_has_resources_with_free_infrastructure_slots = yes
+}
+CM_any_defined_scopes_have_possible_free_infrastructure_slots = {
+	if = {
+		limit = { CM_has_strictly_defined_states_filter = no }
+		
+		if = {
+			limit = {
+				check_variable = { CM_states_filter_regime?1 = 1 }
+			}
+			
+			any_of_scopes = {
+				array = core_states
+				
+				CM_is_owned_and_controlled_with_possible_free_infrastructure_slots = yes
+			}
+		}
+		else = { # CM_states_filter_regime = 3
+			any_of_scopes = {
+				array = owned_controlled_states
+				
+				CM_has_resources_with_free_infrastructure_slots = yes
+			}
+		}
+	}
+	else = {
+		any_of_scopes = {
+			array = controlled_states
+			
+			CM_has_resources_with_free_infrastructure_slots = yes
+		}
+	}
+}
+
+CM_can_possible_increase_resources = {
+	OR = { # быстрая проверка на возможность
+		check_variable = { resource_produced@steel > 0 }
+		check_variable = { resource_produced@crystals > 0 }
+		check_variable = { resource_produced@tungsten > 0 }
+		check_variable = { resource_produced@aluminium > 0 }
+		check_variable = { resource_produced@rubber > 0 }
+		check_variable = { resource_produced@chromium > 0 }
+		check_variable = { resource_produced@oil > 0 }
+	}
+	
+	CM_any_defined_scopes_have_possible_free_infrastructure_slots = yes
+}
+CM_can_possible_construct_infrastructure = {
+	num_of_available_civilian_factories > 0
+	
+	CM_can_possible_increase_resources = yes
+}
+
+CM_is_highest_priority_state_for_infrastructure_resource_bonus = {
+	all_of_scopes = {
+		array = CM_temp_possible_construction_targets
+		
+		check_variable = {
+			var = CM_state_sum_of_infrastructure_bonus_resources
+			compare = greater_than_or_equals
+			value = PREV.CM_state_sum_of_infrastructure_bonus_resources
+		}
+		
+		if = {
+			limit = {
+				check_variable = { CM_state_sum_of_infrastructure_bonus_resources = PREV.CM_state_sum_of_infrastructure_bonus_resources }
+			}
+			
+			check_variable = {
+				var = state_and_terrain_strategic_value
+				compare = less_than_or_equals
+				value = PREV.state_and_terrain_strategic_value
+			}
+		}
+	}
+}
+
+CM_has_free_building_slot_for_industrial_complex_and_not_blocked = {
+	free_building_slots = {
+		building = industrial_complex
+		size > 0
+		include_locked = no
+	}
+	
+	NOT = { has_state_flag = CM_blocked_for_QCF_flag }
+}
+CM_is_owned_and_controlled_with_free_building_slot_for_industrial_complex_and_not_blocked = {
+	is_owned_and_controlled_by = ROOT
+	
+	CM_has_free_building_slot_for_industrial_complex_and_not_blocked = yes
+}
+
+CM_any_defined_scopes_have_possible_free_industrial_complexes_slots = {
+	if = {
+		limit = { CM_has_strictly_defined_states_filter = no }
+		
+		if = {
+			limit = {
+				check_variable = { CM_states_filter_regime?1 = 1 }
+			}
+			
+			any_of_scopes = {
+				array = core_states
+				
+				CM_is_owned_and_controlled_with_free_building_slot_for_industrial_complex_and_not_blocked = yes
+			}
+		}
+		else = { # CM_states_filter_regime = 3
+			any_of_scopes = {
+				array = owned_controlled_states
+				
+				free_building_slots = {
+					building = industrial_complex
+					size > 0
+					include_locked = no
+				}
+			}
+		}
+	}
+	else = { # CM_states_filter_regime = 2
+		any_of_scopes = {
+			array = controlled_states
+			
+			free_building_slots = {
+				building = industrial_complex
+				size > 0
+				include_locked = no
+			}
+		}
+	}
+}
+CM_can_possible_construct_industrial_complex = {
+	num_of_available_civilian_factories > 0
+	
+	CM_any_defined_scopes_have_possible_free_industrial_complexes_slots = yes
+}
+
+CM_has_free_building_slot_for_arms_factory_and_not_blocked = {
+	free_building_slots = {
+		building = arms_factory
+		size > 0
+		include_locked = no
+	}
+	
+	NOT = { has_state_flag = CM_blocked_for_QCF_flag }
+}
+CM_is_owned_and_controlled_with_free_building_slot_for_arms_factory_and_not_blocked = {
+	is_owned_and_controlled_by = ROOT
+	
+	CM_has_free_building_slot_for_arms_factory_and_not_blocked = yes
+}
+
+CM_any_defined_scopes_have_possible_free_arms_factories_slots = {
+	if = {
+		limit = { CM_has_strictly_defined_states_filter = no }
+		
+		if = {
+			limit = {
+				check_variable = { CM_states_filter_regime?1 = 1 }
+			}
+			
+			any_of_scopes = {
+				array = core_states
+				
+				CM_is_owned_and_controlled_with_free_building_slot_for_arms_factory_and_not_blocked = yes
+			}
+		}
+		else = { # CM_states_filter_regime = 3
+			any_of_scopes = {
+				array = owned_controlled_states
+				
+				free_building_slots = {
+					building = arms_factory
+					size > 0
+					include_locked = no
+				}
+			}
+		}
+	}
+	else = {
+		any_of_scopes = {
+			array = controlled_states
+			
+			free_building_slots = {
+				building = arms_factory
+				size > 0
+				include_locked = no
+			}
+		}
+	}
+}
+CM_can_possible_construct_arms_factory = {
+	num_of_available_civilian_factories > 0
+	
+	CM_any_defined_scopes_have_possible_free_arms_factories_slots = yes
+}
+
+CM_has_free_building_slot_for_naval_dockyard_and_not_blocked = {
+	free_building_slots = {
+		building = dockyard
+		size > 0
+		include_locked = no
+	}
+	
+	NOT = { has_state_flag = CM_blocked_for_QCF_flag }
+}
+CM_is_owned_and_controlled_with_free_building_slot_for_naval_dockyard_and_not_blocked = {
+	is_owned_and_controlled_by = ROOT
+	
+	CM_has_free_building_slot_for_naval_dockyard_and_not_blocked = yes
+}
+
+CM_any_defined_scopes_have_possible_free_naval_dockyards_slots = {
+	if = {
+		limit = { CM_has_strictly_defined_states_filter = no }
+		
+		if = {
+			limit = {
+				check_variable = { CM_states_filter_regime?1 = 1 }
+			}
+			
+			any_of_scopes = {
+				array = core_states
+				
+				CM_is_owned_and_controlled_with_free_building_slot_for_naval_dockyard_and_not_blocked = yes
+			}
+		}
+		else = { # CM_states_filter_regime = 3
+			any_of_scopes = {
+				array = owned_controlled_states
+				
+				free_building_slots = {
+					building = dockyard
+					size > 0
+					include_locked = no
+				}
+			}
+		}
+	}
+	else = {
+		any_of_scopes = {
+			array = controlled_states
+			
+			free_building_slots = {
+				building = dockyard
+				size > 0
+				include_locked = no
+			}
+		}
+	}
+}
+CM_can_possible_construct_naval_dockyard = {
+	num_of_available_civilian_factories > 0
+	
+	CM_any_defined_scopes_have_possible_free_naval_dockyards_slots = yes
+}
+
+########## Construction Management Panel Scripted Triggers ##########
+
+CM_state_has_highest_sum_of_infrastructure_bonus_resources = {
+	check_variable = {
+		var = CM_state_sum_of_infrastructure_bonus_resources
+		compare = greater_than_or_equals
+		value = PREV.CM_state_sum_of_infrastructure_bonus_resources
+	}
+	
+	if = {
+		limit = { check_variable = { CM_state_sum_of_infrastructure_bonus_resources = PREV.CM_state_sum_of_infrastructure_bonus_resources } }
+		check_variable = { state_and_terrain_strategic_value > PREV.state_and_terrain_strategic_value }
+	}
+}
+CM_state_has_highest_oil_coefficient = {
+	check_variable = {
+		var = CM_state_resources_coefficients^6
+		compare = greater_than_or_equals
+		value = PREV.CM_state_resources_coefficients^6
+	}
+	
+	if = {
+		limit = { check_variable = { CM_state_resources_coefficients^6 = PREV.CM_state_resources_coefficients^6 } }
+		CM_state_has_highest_sum_of_infrastructure_bonus_resources = yes
+	}
+}
+CM_state_has_highest_aluminum_coefficient = {
+	check_variable = {
+		var = CM_state_resources_coefficients^3
+		compare = greater_than_or_equals
+		value = PREV.CM_state_resources_coefficients^3
+	}
+	
+	if = {
+		limit = { check_variable = { CM_state_resources_coefficients^3 = PREV.CM_state_resources_coefficients^3 } }
+		CM_state_has_highest_sum_of_infrastructure_bonus_resources = yes
+	}
+}
+CM_state_has_highest_rubber_coefficient = {
+	check_variable = {
+		var = CM_state_resources_coefficients^4
+		compare = greater_than_or_equals
+		value = PREV.CM_state_resources_coefficients^4
+	}
+	
+	if = {
+		limit = { check_variable = { CM_state_resources_coefficients^4 = PREV.CM_state_resources_coefficients^4 } }
+		CM_state_has_highest_sum_of_infrastructure_bonus_resources = yes
+	}
+}
+CM_state_has_highest_tungsten_coefficient = {
+	check_variable = {
+		var = CM_state_resources_coefficients^2
+		compare = greater_than_or_equals
+		value = PREV.CM_state_resources_coefficients^2
+	}
+	
+	if = {
+		limit = { check_variable = { CM_state_resources_coefficients^2 = PREV.CM_state_resources_coefficients^2 } }
+		CM_state_has_highest_sum_of_infrastructure_bonus_resources = yes
+	}
+}
+CM_state_has_highest_steel_coefficient = {
+	check_variable = {
+		var = CM_state_resources_coefficients^0
+		compare = greater_than_or_equals
+		value = PREV.CM_state_resources_coefficients^0
+	}
+	
+	if = {
+		limit = { check_variable = { CM_state_resources_coefficients^0 = PREV.CM_state_resources_coefficients^0 } }
+		CM_state_has_highest_sum_of_infrastructure_bonus_resources = yes
+	}
+}
+CM_state_has_highest_chromium_coefficient = {
+	check_variable = {
+		var = CM_state_resources_coefficients^5
+		compare = greater_than_or_equals
+		value = PREV.CM_state_resources_coefficients^5
+	}
+	
+	if = {
+		limit = { check_variable = { CM_state_resources_coefficients^5 = PREV.CM_state_resources_coefficients^5 } }
+		CM_state_has_highest_sum_of_infrastructure_bonus_resources = yes
+	}
+}
+CM_state_has_highest_crystals_coefficient = {
+	check_variable = {
+		var = CM_state_resources_coefficients^1
+		compare = greater_than_or_equals
+		value = PREV.CM_state_resources_coefficients^1
+	}
+	
+	if = {
+		limit = { check_variable = { CM_state_resources_coefficients^1 = PREV.CM_state_resources_coefficients^1 } }
+		CM_state_has_highest_sum_of_infrastructure_bonus_resources = yes
+	}
+}
+
+CM_state_has_fastest_buildings_construction_speed = {
+	check_variable = {
+		var = CM_state_buildings_construction_speed
+		compare = greater_than_or_equals
+		value = PREV.CM_state_buildings_construction_speed
+	}
+	
+	if = {
+		limit = { check_variable = { CM_state_buildings_construction_speed = PREV.CM_state_buildings_construction_speed } }
+		
+		if = {
+			limit = { CM_has_free_building_slot = yes }
+			
+			if = {
+				limit = { PREV = { CM_has_free_building_slot = yes } }
+				check_variable = { state_and_terrain_strategic_value > PREV.state_and_terrain_strategic_value }
+			}
+		}
+		else = {
+			PREV = { CM_has_free_building_slot = no }
+			check_variable = { state_and_terrain_strategic_value > PREV.state_and_terrain_strategic_value }
+		}
+	}
+}
+CM_state_has_fastest_industrial_complexes_construction_speed = {
+	check_variable = {
+		var = CM_state_industrial_complex_construction_speed
+		compare = greater_than_or_equals
+		value = PREV.CM_state_industrial_complex_construction_speed
+	}
+	
+	if = {
+		limit = { check_variable = { CM_state_industrial_complex_construction_speed = PREV.CM_state_industrial_complex_construction_speed } }
+		
+		if = {
+			limit = {
+				free_building_slots = {
+					building = industrial_complex
+					size > 0
+					include_locked = no
+				}
+			}
+			
+			if = {
+				limit = {
+					PREV = {
+						free_building_slots = {
+							building = industrial_complex
+							size > 0
+							include_locked = no
+						}
+					}
+				}
+				
+				check_variable = { state_and_terrain_strategic_value > PREV.state_and_terrain_strategic_value }
+			}
+		}
+		else = {
+			PREV = {
+				free_building_slots = {
+					building = industrial_complex
+					size < 1
+					include_locked = no
+				}
+			}
+			
+			check_variable = { state_and_terrain_strategic_value > PREV.state_and_terrain_strategic_value }
+		}
+	}
+}
+CM_state_has_fastest_arms_factories_construction_speed = {
+	check_variable = {
+		var = CM_state_arms_factory_construction_speed
+		compare = greater_than_or_equals
+		value = PREV.CM_state_arms_factory_construction_speed
+	}
+	
+	if = {
+		limit = { check_variable = { CM_state_arms_factory_construction_speed = PREV.CM_state_arms_factory_construction_speed } }
+		
+		if = {
+			limit = {
+				free_building_slots = {
+					building = arms_factory
+					size > 0
+					include_locked = no
+				}
+			}
+			
+			if = {
+				limit = {
+					PREV = {
+						free_building_slots = {
+							building = arms_factory
+							size > 0
+							include_locked = no
+						}
+					}
+				}
+				
+				check_variable = { state_and_terrain_strategic_value > PREV.state_and_terrain_strategic_value }
+			}
+		}
+		else = {
+			PREV = {
+				free_building_slots = {
+					building = arms_factory
+					size < 1
+					include_locked = no
+				}
+			}
+			
+			check_variable = { state_and_terrain_strategic_value > PREV.state_and_terrain_strategic_value }
+		}
+	}
+}
+CM_state_has_fastest_naval_dockyards_construction_speed = {
+	check_variable = {
+		var = CM_state_naval_dockyard_construction_speed
+		compare = greater_than_or_equals
+		value = PREV.CM_state_naval_dockyard_construction_speed
+	}
+	
+	if = {
+		limit = { check_variable = { CM_state_naval_dockyard_construction_speed = PREV.CM_state_naval_dockyard_construction_speed } }
+		
+		if = {
+			limit = {
+				free_building_slots = {
+					building = dockyard
+					size > 0
+					include_locked = no
+				}
+			}
+			
+			if = {
+				limit = {
+					PREV = {
+						free_building_slots = {
+							building = dockyard
+							size > 0
+							include_locked = no
+						}
+					}
+				}
+				
+				check_variable = { state_and_terrain_strategic_value > PREV.state_and_terrain_strategic_value }
+			}
+		}
+		else = {
+			if = {
+				limit = { is_coastal = yes }
+				
+				if = {
+					limit = {
+						PREV = {
+							free_building_slots = {
+								building = dockyard
+								size > 0
+								include_locked = no
+							}
+						}
+					}
+					
+					check_variable = { state_and_terrain_strategic_value > PREV.state_and_terrain_strategic_value }
+				}
+			}
+			else = {
+				PREV = { is_coastal = no }
+				
+				check_variable = { state_and_terrain_strategic_value > PREV.state_and_terrain_strategic_value }
+			}
+		}
+	}
+}
+
+CM_has_free_building_slot = {
+	OR = {
+		free_building_slots = {
+			building = industrial_complex
+			size > 0
+			include_locked = no
+		}
+		free_building_slots = {
+			building = arms_factory
+			size > 0
+			include_locked = no
+		}
+	}
+}
+CM_is_owned_and_controlled_with_free_building_slots = {
+	is_owned_and_controlled_by = ROOT
+	
+	CM_has_free_building_slot = yes
+}
+CM_has_free_building_slot_and_blocked_for_QCF = {
+	CM_has_free_building_slot = yes
+	
+	has_state_flag = CM_blocked_for_QCF_flag
+}
+CM_is_owned_and_controlled_with_free_building_slots_and_blocked_for_QCF = {
+	is_owned_and_controlled_by = ROOT
+	
+	CM_has_free_building_slot_and_blocked_for_QCF = yes
+}
